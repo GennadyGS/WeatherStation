@@ -2,12 +2,18 @@ namespace WeatherStationUpload
 
 open System
 
+[<Measure>] 
+type ``%``
+
+[<Measure>] 
+type C
+
 type Mesasurement = 
     { Timestamp: DateTime
-      TemperatureInside: decimal
-      HimidityInside: decimal
-      TemperatureOutside: decimal
-      HimidityOutside: decimal }
+      TemperatureInside: decimal<C>
+      HimidityInside: decimal<``%``>
+      TemperatureOutside: decimal<C>
+      HimidityOutside: decimal<``%``> }
 
 module Parser = 
     open FSharp.Data
@@ -19,10 +25,11 @@ module Parser =
     type private HumidityRegex = Regex< @"(?<Humidity>\d+.\d+)%" >
 
     let private parseTemperature str = 
-        Decimal.Parse(TemperatureRegex().TypedMatch(str).Temperature.Value, CultureInfo.InvariantCulture)
+        Decimal.Parse(TemperatureRegex().TypedMatch(str).Temperature.Value, CultureInfo.InvariantCulture) * 1m<C>
+        
 
     let private parseHumidity str = 
-        Decimal.Parse(HumidityRegex().TypedMatch(str).Humidity.Value, CultureInfo.InvariantCulture)
+        Decimal.Parse(HumidityRegex().TypedMatch(str).Humidity.Value, CultureInfo.InvariantCulture) * 1m<``%``>
 
     let parseHtmlDocument (htmlDocument : HtmlDocument) = 
         let table = htmlDocument.Descendants("table") |> Seq.head
