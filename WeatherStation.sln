@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{7D3E7412-1A19-44A1-B653-2F52FDDDF53B}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherStationUpload", "WeatherStationUpload\WeatherStationUpload.fsproj", "{E5011634-E970-4E6F-9CE4-1D56D728F1CF}"
 EndProject
 Global
