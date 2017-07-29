@@ -1,7 +1,7 @@
 ﻿module Main
 
 open FSharp.Data
-open WeatherStationUpload.Parser
+open WeatherStationUpload.HtmlParser
 
 [<EntryPoint>]
 let main argv = 
