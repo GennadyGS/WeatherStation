@@ -39,6 +39,7 @@
   <ItemGroup>
     <None Include="Script.fsx" />
     <Compile Include="Types.fs" />
+    <Compile Include="HtmlLoader.fs" />
     <Compile Include="HtmlParser.fs" />
     <Compile Include="Composite.fs" />
     <Compile Include="Main.fs" />
