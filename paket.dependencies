@@ -3,3 +3,4 @@ nuget FAKE
 nuget FSharp.Core
 nuget FSharp.Data       
 nuget FSharp.Text.RegexProvider
+nuget xunit
