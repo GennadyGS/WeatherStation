@@ -4,4 +4,4 @@ nuget FSharp.Core
 nuget FSharp.Data       
 nuget FSharp.Text.RegexProvider
 nuget xunit
-nuget xunit.runner.visualstudio
+nuget xunit.runner.visualstudio version_in_path: true
