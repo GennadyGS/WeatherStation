@@ -67,7 +67,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Library1.fs" />
+    <Compile Include="CompositeTests.fs" />
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
