@@ -41,6 +41,7 @@
     <Compile Include="Types.fs" />
     <Compile Include="HtmlParser.fs" />
     <Compile Include="Main.fs" />
+    <None Include="paket.references" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Choose>
