@@ -95,6 +95,13 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WeatherStationUpload\WeatherStationUpload.fsproj">
+      <Name>WeatherStationUpload</Name>
+      <Project>{e5011634-e970-4e6f-9ce4-1d56d728f1cf}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
