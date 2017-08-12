@@ -9,7 +9,7 @@ let stationId = "07523951F222"
 [<EntryPoint>]
 let main argv = 
     stationId
-    |> loadHtml
+    |> loadHtmlDocument
     |> parseHtmlDocument 
     |> Seq.toList
     |> printf "%A"
