@@ -1,4 +1,9 @@
 ﻿module WeatherStationUpload.Composite
 
-let loadWeatherData dateFrom dateTo =
-    ()
+open HtmlLoader
+open HtmlParser
+
+let processWeatherData fromDate toDate stationId =
+    stationId
+    |> loadHtmlDocument fromDate toDate
+    |> parseHtmlDocument 

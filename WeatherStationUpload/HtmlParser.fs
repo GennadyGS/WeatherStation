@@ -28,5 +28,6 @@ let parseHtmlDocument (htmlDocument : HtmlDocument) =
                   TemperatureOutside = tdTemperatureOutside.InnerText() |> parseTemperature
                   HimidityOutside = tdHumidityOutside.InnerText() |> parseHumidity }
             | _ -> failwith "Parsing error")
+    |> Seq.toList
 
 

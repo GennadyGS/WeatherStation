@@ -2,25 +2,28 @@
 
 open FSharp.Data
 open System.Net
+open System
+open System.Globalization
 
 [<Literal>]
 let private url = "http://measurements.mobile-alerts.eu/Home/MeasurementDetails"
+
+let private toEpoch dateTime = 
+    DateTimeOffset(dateTime).ToUnixTimeSeconds()
 
 let private checkStatusCode statusCode = 
     if statusCode <> HttpStatusCode.OK then
         failwith (sprintf "Status code %A received" statusCode)
 
-let loadHtmlDocument stationId = 
+let loadHtmlDocument (fromDate : DateTime) (toDate : DateTime) stationId = 
     let ({ StatusCode = statusCode; ResponseStream = responceStream }) = 
         Http.RequestStream(url, body = FormValues
             [("deviceId", stationId)
              ("vendorid", "270f2261-3477-4872-9580-ead9cab3044c")
-             ("from", "08/10/2017 3:49 PM")
-             ("to", "08/11/2017 3:49 PM")
              ("command", "refresh")
              ("pagesize", "250")
              ("appbundle", "eu.mobile_alerts.mobilealerts")
-             ("fromepoch", "1502369340")
-             ("toepoch", "1502455740")])
+             ("fromepoch", fromDate |> toEpoch |> string)
+             ("toepoch", toDate |> toEpoch |> string)])
     checkStatusCode (enum statusCode)
     HtmlDocument.Load responceStream
