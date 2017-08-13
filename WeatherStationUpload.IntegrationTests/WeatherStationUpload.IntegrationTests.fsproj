@@ -84,24 +84,6 @@
       </PropertyGroup>
     </When>
   </Choose>
-  <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="CompositeTests.fs" />
-    <None Include="paket.references" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WeatherStationUpload\WeatherStationUpload.fsproj">
-      <Name>WeatherStationUpload</Name>
-      <Project>{e5011634-e970-4e6f-9ce4-1d56d728f1cf}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -2061,4 +2043,21 @@
   <Import Project="..\packages\NETStandard.Library.2.0.0\build\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.0\build\NETStandard.Library.targets')" Label="Paket" />
   <Import Project="..\packages\NETStandard.Library.2.0.0\build\$(__paket__NETStandard_Library_targets).targets" Condition="Exists('..\packages\NETStandard.Library.2.0.0\build\$(__paket__NETStandard_Library_targets).targets')" Label="Paket" />
   <Import Project="..\packages\xunit.runner.visualstudio.2.2.0\build\$(__paket__xunit_runner_visualstudio_targets).targets" Condition="Exists('..\packages\xunit.runner.visualstudio.2.2.0\build\$(__paket__xunit_runner_visualstudio_targets).targets')" Label="Paket" />
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="CompositeTests.fs" />
+    <None Include="paket.references" />
+    <Content Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <ProjectReference Include="..\WeatherStationUpload\WeatherStationUpload.fsproj">
+      <Name>WeatherStationUpload</Name>
+      <Project>{e5011634-e970-4e6f-9ce4-1d56d728f1cf}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
