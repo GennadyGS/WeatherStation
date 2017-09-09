@@ -3,5 +3,6 @@ nuget FAKE
 nuget FSharp.Core
 nuget FSharp.Data       
 nuget FSharp.Text.RegexProvider
+nuget SqlProvider
 nuget xunit
 nuget xunit.runner.visualstudio version_in_path: true
