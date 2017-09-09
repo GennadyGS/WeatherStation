@@ -15,3 +15,6 @@ type Mesasurement =
       TemperatureOutside: decimal<C>
       HimidityOutside: decimal<``%``> }
 
+type DeviceInfo = 
+    { VendorId: string
+      DeviceId: string }
