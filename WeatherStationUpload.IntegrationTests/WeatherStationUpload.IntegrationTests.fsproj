@@ -93,7 +93,7 @@
   -->
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="CompositeTests.fs" />
+    <Compile Include="DataCollectorTests.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>
