@@ -26,8 +26,8 @@ let insertMeasurement
     let row = dataContext.InnerDataContext.Dbo.Observations.Create()
     row.DeviceId <- deviceInfo.DeviceId
     row.VendorId <- deviceInfo.VendorId
-    row.HumidityInside <- Some (measurement.HimidityInside / 1m<``%``>)
-    row.HumidityOutside <- Some (measurement.HimidityOutside / 1m<``%``>)
+    row.HumidityInside <- Some (measurement.HumidityInside / 1m<``%``>)
+    row.HumidityOutside <- Some (measurement.HumidityOutside / 1m<``%``>)
     row.TemperatureInside <- Some (measurement.TemperatureInside / 1m<C>)
     row.TemperatureOutside <- Some (measurement.TemperatureOutside / 1m<C>)
     row.Timestamp <- measurement.Timestamp

@@ -24,9 +24,9 @@ let parseHtmlDocument (htmlDocument : HtmlDocument): Measurement list =
             | [tdTimeStamp; tdTemparatureInside; tdHumidityInside; tdTemperatureOutside; tdHumidityOutside] ->
                 { Timestamp = DateTime.Parse(tdTimeStamp.InnerText(), CultureInfo.InvariantCulture)
                   TemperatureInside = tdTemparatureInside.InnerText() |> parseTemperature
-                  HimidityInside = tdHumidityInside.InnerText() |> parseHumidity
+                  HumidityInside = tdHumidityInside.InnerText() |> parseHumidity
                   TemperatureOutside = tdTemperatureOutside.InnerText() |> parseTemperature
-                  HimidityOutside = tdHumidityOutside.InnerText() |> parseHumidity }
+                  HumidityOutside = tdHumidityOutside.InnerText() |> parseHumidity }
             | _ -> failwith "Parsing error")
     |> Seq.toList
 

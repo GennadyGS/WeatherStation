@@ -11,9 +11,9 @@ type C
 type Measurement = 
     { Timestamp: DateTime
       TemperatureInside: decimal<C>
-      HimidityInside: decimal<``%``>
+      HumidityInside: decimal<``%``>
       TemperatureOutside: decimal<C>
-      HimidityOutside: decimal<``%``> }
+      HumidityOutside: decimal<``%``> }
 
 type DeviceInfo = 
     { VendorId: Guid
