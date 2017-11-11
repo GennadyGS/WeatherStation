@@ -6,7 +6,6 @@ open WeatherStationUpload.DataCollector
 open System
 
 type DataCollectorTests() = 
-
     let deviceInfo : DeviceInfo = 
         { DeviceId = "07523951F222"
           VendorId = Guid("270f2261-3477-4872-9580-ead9cab3044c") }
