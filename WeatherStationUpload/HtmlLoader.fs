@@ -15,15 +15,15 @@ let private checkStatusCode statusCode =
     if statusCode <> HttpStatusCode.OK then
         failwith (sprintf "Status code %A received" statusCode)
 
-let loadHtmlDocument (fromDate : DateTime) (toDate : DateTime) (deviceInfo : DeviceInfo) = 
+let loadHtmlDocument (fromDate : DateTime) (toDate : DateTime) (deviceInfo : DeviceInfo): HtmlDocument = 
     let ({ StatusCode = statusCode; ResponseStream = responceStream }) = 
         Http.RequestStream(url, body = FormValues
             [("deviceId", deviceInfo.DeviceId)
-             ("vendorid", deviceInfo.VendorId)
+             ("vendorId", deviceInfo.VendorId)
              ("command", "refresh")
-             ("pagesize", "250")
-             ("appbundle", "eu.mobile_alerts.mobilealerts")
-             ("fromepoch", fromDate |> toEpoch |> string)
-             ("toepoch", toDate |> toEpoch |> string)])
+             ("pageSize", "250")
+             ("appBundle", "eu.mobile_alerts.mobilealerts")
+             ("fromEpoch", fromDate |> toEpoch |> string)
+             ("toEpoch", toDate |> toEpoch |> string)])
     checkStatusCode (enum statusCode)
     HtmlDocument.Load responceStream
