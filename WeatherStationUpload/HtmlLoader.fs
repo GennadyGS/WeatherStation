@@ -23,7 +23,7 @@ let loadHtmlDocument
     let ({ StatusCode = statusCode; ResponseStream = responceStream }) = 
         Http.RequestStream(url, body = FormValues
             [("deviceId", deviceInfo.DeviceId)
-             ("vendorId", deviceInfo.VendorId)
+             ("vendorId", deviceInfo.VendorId.ToString())
              ("command", "refresh")
              ("pageSize", pageSize |> string)
              ("page", page |> string)
