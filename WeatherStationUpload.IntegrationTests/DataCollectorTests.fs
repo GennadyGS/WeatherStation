@@ -3,12 +3,13 @@
 open Xunit
 open WeatherStationUpload
 open WeatherStationUpload.DataCollector
+open System
 
 type DataCollectorTests() = 
 
     let deviceInfo : DeviceInfo = 
         { DeviceId = "07523951F222"
-          VendorId = "270f2261-3477-4872-9580-ead9cab3044c" }
+          VendorId = Guid("270f2261-3477-4872-9580-ead9cab3044c") }
     
     [<Fact>]
     member this.``CollectWeatherData should return result with appropriate size for the last days`` () = 

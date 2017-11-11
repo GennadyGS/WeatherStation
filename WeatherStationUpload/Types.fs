@@ -16,5 +16,5 @@ type Measurement =
       HimidityOutside: decimal<``%``> }
 
 type DeviceInfo = 
-    { VendorId: string
+    { VendorId: Guid
       DeviceId: string }
