@@ -8,7 +8,7 @@ type ``%``
 [<Measure>] 
 type C
 
-type Mesasurement = 
+type Measurement = 
     { Timestamp: DateTime
       TemperatureInside: decimal<C>
       HimidityInside: decimal<``%``>

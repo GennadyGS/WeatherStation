@@ -15,7 +15,7 @@ let private parseTemperature str =
 let private parseHumidity str = 
     Decimal.Parse(HumidityRegex().TypedMatch(str).Humidity.Value, CultureInfo.InvariantCulture) * 1m<``%``>
 
-let parseHtmlDocument (htmlDocument : HtmlDocument) = 
+let parseHtmlDocument (htmlDocument : HtmlDocument): Measurement list = 
     let table = htmlDocument.Descendants("table") |> Seq.head
     let tBody = (table.Descendants("tbody") |> Seq.exactlyOne)
     tBody.Descendants("tr")
