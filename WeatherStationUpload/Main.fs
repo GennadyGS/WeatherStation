@@ -1,7 +1,7 @@
 ﻿module Main
 
 open System
-open WeatherStationUpload.Composite
+open WeatherStationUpload.Uploader
 open WeatherStationUpload
 
 let deviceInfo : DeviceInfo = 
@@ -14,7 +14,7 @@ let dateTo = DateTime(2017, 08, 12, 15, 0, 0)
 [<EntryPoint>]
 let main argv = 
     deviceInfo
-    |> processWeatherData dateFrom dateTo
+    |> uploadWeatherData dateFrom dateTo
     |> printf "%A"
     0
 

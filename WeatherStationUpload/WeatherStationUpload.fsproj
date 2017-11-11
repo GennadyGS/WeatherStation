@@ -51,6 +51,7 @@
     <Compile Include="HtmlLoader.fs" />
     <Compile Include="HtmlParser.fs" />
     <Compile Include="DbService.fs" />
+    <Compile Include="DataCollector.fs" />
     <Compile Include="Composite.fs" />
     <Compile Include="Main.fs" />
     <None Include="paket.references" />
