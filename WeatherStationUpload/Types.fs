@@ -8,13 +8,17 @@ type ``%``
 [<Measure>] 
 type C
 
-type Measurement = 
+type MeasurementData = 
     { Timestamp: DateTime
-      TemperatureInside: decimal<C>
-      HumidityInside: decimal<``%``>
-      TemperatureOutside: decimal<C>
-      HumidityOutside: decimal<``%``> }
+      TemperatureInside: decimal<C> option
+      HumidityInside: decimal<``%``> option
+      TemperatureOutside: decimal<C> option
+      HumidityOutside: decimal<``%``> option }
 
 type DeviceInfo = 
     { VendorId: Guid
       DeviceId: string }
+
+type Measurement = 
+    { Device: DeviceInfo
+      Data: MeasurementData }
