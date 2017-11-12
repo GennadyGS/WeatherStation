@@ -97,6 +97,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="DbTests.fs" />
+    <Compile Include="DbServiceTests.fs" />
     <Compile Include="DataCollectorTests.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />

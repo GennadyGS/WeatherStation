@@ -10,12 +10,12 @@ type private TemperatureRegex = Regex< @"(?<Temperature>\d+.\d+)\s*C" >
 type private HumidityRegex = Regex< @"(?<Humidity>\d+.\d+)%" >
 
 let private parseTemperature str = 
-    Decimal.Parse(TemperatureRegex().TypedMatch(str).Temperature.Value, CultureInfo.InvariantCulture) * 1m<C>
+    parseDecimal (TemperatureRegex().TypedMatch(str).Temperature.Value)
 
 let private parseHumidity str = 
     Decimal.Parse(HumidityRegex().TypedMatch(str).Humidity.Value, CultureInfo.InvariantCulture) * 1m<``%``>
 
-let parseHtmlDocument (htmlDocument : HtmlDocument): Measurement list = 
+let parseHtmlDocument (htmlDocument : HtmlDocument): MeasurementData list = 
     let table = htmlDocument.Descendants("table") |> Seq.head
     let tBody = (table.Descendants("tbody") |> Seq.exactlyOne)
     tBody.Descendants("tr")
