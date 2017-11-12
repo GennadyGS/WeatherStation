@@ -1,12 +1,11 @@
 ﻿namespace WeatherStationUpload.IntegrationTests
 
 open FSharp.Data.Sql.Providers
-open System.Configuration
 
 type DbTests () =
     let executeSqlCommand sql = 
         using 
-            (MSSqlServer.createConnection ConfigurationManager.ConnectionStrings.["WeatherStation"].ConnectionString)
+            (MSSqlServer.createConnection Settings.ConnectionStrings.WeatherStation)
             (fun connection -> 
                 connection.Open()
                 let command = MSSqlServer.createCommand sql connection
