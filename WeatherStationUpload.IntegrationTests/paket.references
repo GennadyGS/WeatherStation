@@ -1,3 +1,4 @@
 ﻿FSharp.Core
+SqlProvider
 xunit
 xunit.runner.visualstudio
