@@ -10,27 +10,26 @@ type DbServiceTests() =
     
     let connectionString = Settings.ConnectionStrings.WeatherStation
 
-    let currentTime = DateTime.UtcNow
+    let getSampleMeasurement () : Measurement = 
+        { Device = 
+            { VendorId = Settings.VendorId 
+              DeviceId = Settings.DeviceId } 
+          Data = 
+            { TemperatureInside = Some (19.2m<C>)
+              TemperatureOutside = Some (-12.3m<C>)
+              HumidityInside = Some (56.2m<``%``>)
+              HumidityOutside = Some (79.5m<``%``>) 
+              Timestamp = DateTime(2017, 11, 18, 11, 02, 03) }}
 
-    let getSampleMeasurement () : MeasurementData = 
-        //{ Header = 
-        //    { ObservationTime = 
-        //        { Date = roundedObservationTime.Date
-        //          Hour = byte(roundedObservationTime.Hour) }
-        //      StationNumber = stationNumber 
-        //      RequestTime = roundToSeconds currentTime }
-        //  Temperature = -1.3m }
-        failwith "Not implemented"
-
-    let sortMeasurements (observations : MeasurementData list) : MeasurementData list = 
-        observations |> List.sort
+    let sortMeasurements (measurements : Measurement list) : Measurement list = 
+        measurements |> List.sort
     
-    let saveMeasurement deviceInfo measurement =
+    let saveMeasurement measurement =
         DatabaseUtils.writeDataContext 
-            DbService.insertMeasurement connectionString (deviceInfo, measurement) 
+            DbService.insertMeasurement connectionString measurement
         |> ResultUtils.get
 
-    let saveMeasurements deviceInfo measurements =
+    let saveMeasurements measurements =
         DatabaseUtils.writeDataContextForList 
             DbService.insertMeasurement connectionString measurements
         |> ResultUtils.get
@@ -42,8 +41,8 @@ type DbServiceTests() =
             readDataContext 
                 DbService.getMeasurements connectionString
         
-        let expectedResult = measurements |> sortMeasurements |> Success
-        expectedResult =! (result |> Result.map sortMeasurements)
+        let expectedResult = measurements |> sortMeasurements |> Ok
+        Assert.Equal(expectedResult, result |> Result.map sortMeasurements)
 
     [<Fact>]
     let ``SaveObservations should save empty list of observation correctly``() = 

@@ -4,16 +4,25 @@ open System
 open FSharp.Data
 open FSharp.Text.RegexProvider
 open System.Globalization
+open WeatherStationUpload.TryParser
+open FSharp.Data.HtmlAttribute
+open MeasureUtils
 
 type private TemperatureRegex = Regex< @"(?<Temperature>\d+.\d+)\s*C" >
 
 type private HumidityRegex = Regex< @"(?<Humidity>\d+.\d+)%" >
 
 let private parseTemperature str = 
-    parseDecimal (TemperatureRegex().TypedMatch(str).Temperature.Value)
+    parseDecimalInvariant 
+        NumberStyles.AllowDecimalPoint 
+        (TemperatureRegex().TypedMatch(str).Temperature.Value)
+    |> Option.map valueToCelsius
 
 let private parseHumidity str = 
-    Decimal.Parse(HumidityRegex().TypedMatch(str).Humidity.Value, CultureInfo.InvariantCulture) * 1m<``%``>
+    parseDecimalInvariant 
+        NumberStyles.AllowDecimalPoint 
+        (HumidityRegex().TypedMatch(str).Humidity.Value)
+    |> Option.map valueToPercent
 
 let parseHtmlDocument (htmlDocument : HtmlDocument): MeasurementData list = 
     let table = htmlDocument.Descendants("table") |> Seq.head
