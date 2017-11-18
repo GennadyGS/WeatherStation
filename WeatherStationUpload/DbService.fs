@@ -20,7 +20,7 @@ type DataContext private (innerDataContext : SqlProvider.dataContext) =
 
         dataContext.InnerDataContext.SubmitUpdates()
 
-let insertMeasurement (dataContext : DataContext) (stationId : int, measurement : Measurement) : unit =
+let insertMeasurement (dataContext : DataContext) (StationId stationId, measurement : Measurement) : unit =
     let row = dataContext.InnerDataContext.Dbo.Measurements.Create()
     row.StationId <- stationId
     row.HumidityInside <- measurement.HumidityInside |> Option.map percentToValue
@@ -31,15 +31,15 @@ let insertMeasurement (dataContext : DataContext) (stationId : int, measurement 
 
 [<ReflectedDefinition>]
 let private entityToMeasurement 
-        (entity : SqlProvider.dataContext.``dbo.MeasurementsEntity``) : int * Measurement = 
-    entity.StationId,
+        (entity : SqlProvider.dataContext.``dbo.MeasurementsEntity``) : StationId * Measurement = 
+    StationId entity.StationId,
     { Timestamp = entity.Timestamp 
       TemperatureInside = entity.TemperatureInside |> Option.map valueToCelsius
       HumidityInside = entity.HumidityInside |> Option.map valueToPercent
       TemperatureOutside = entity.TemperatureOutside |> Option.map valueToCelsius
       HumidityOutside = entity.HumidityOutside |> Option.map valueToPercent }
 
-let getMeasurements (dataContext : DataContext) : Result<(int * Measurement) list, string> = 
+let getMeasurements (dataContext : DataContext) : Result<list<StationId * Measurement>, string> = 
     query {
         for measurement in dataContext.InnerDataContext.Dbo.Measurements do
         sortBy measurement.StationId

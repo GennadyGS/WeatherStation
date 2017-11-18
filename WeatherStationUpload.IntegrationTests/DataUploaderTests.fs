@@ -18,7 +18,7 @@ type DataUploaderTests() =
             Settings.ConnectionStrings.WeatherStation 
             timeInterval
             (getTestDeviceInfo())
-            Settings.StationId
+            (getTestStationId())
         |> ResultUtils.get
 
         let measurements =
