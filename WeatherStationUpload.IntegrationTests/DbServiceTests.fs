@@ -11,8 +11,7 @@ type DbServiceTests() =
     inherit DbTests()
     
     let connectionString = Settings.ConnectionStrings.WeatherStation
-    let testDeviceInfo = getTestDeviceInfo()
-    let testStationId = Settings.StationId
+    let testStationId = getTestStationId()
 
     let getSampleMeasurements () : Measurement list = 
         [ 

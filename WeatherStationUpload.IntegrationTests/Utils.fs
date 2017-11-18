@@ -5,3 +5,6 @@ open WeatherStationUpload
 let getTestDeviceInfo () : DeviceInfo = 
     { VendorId = Settings.VendorId 
       DeviceId = Settings.DeviceId }
+
+let getTestStationId () : StationId =
+    StationId Settings.StationId

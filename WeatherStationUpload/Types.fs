@@ -12,6 +12,9 @@ type TimeInterval =
     { From: DateTime
       To: DateTime }
 
+type StationId = 
+    | StationId of int
+
 type Measurement = 
     { Timestamp: DateTime
       TemperatureInside: decimal<C> option
