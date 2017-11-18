@@ -13,7 +13,7 @@ type DbTests () =
     
     do
         try
-            ["Observations"]
+            ["Measurements"]
             |> List.map ((sprintf "TRUNCATE TABLE %s") >> executeSqlCommand)
             |> ignore
         with

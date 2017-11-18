@@ -18,6 +18,7 @@ type DataUploaderTests() =
             dateFrom 
             dateTo 
             (getTestDeviceInfo())
+            Settings.StationId
         |> ResultUtils.get
 
         let measurements =

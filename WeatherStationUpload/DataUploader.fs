@@ -7,9 +7,10 @@ let uploadData
         (connectionString : string)
         (fromDate: DateTime) 
         (toDate: DateTime) 
-        (deviceInfo: DeviceInfo) =
+        (deviceInfo: DeviceInfo)
+        (stationId: int) =
     collectData fromDate toDate deviceInfo
-    |> List.map (fun measurement -> deviceInfo, measurement)
+    |> List.map (fun measurement -> stationId, measurement)
     |> DatabaseUtils.writeDataContextForList 
         DbService.insertMeasurement connectionString
     

@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Stations.sql" />
-    <Build Include="Tables\Observations.sql" />
+    <Build Include="Tables\Measurements.sql" />
     <PostDeploy Include="Scripts\Stations.sql" />
   </ItemGroup>
   <ItemGroup>
