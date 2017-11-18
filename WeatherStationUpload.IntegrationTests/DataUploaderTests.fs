@@ -10,13 +10,13 @@ open WeatherStationUpload.IntegrationTests
 type DataUploaderTests() = 
     [<Fact>]
     member this.``UploadData should upload data correctly for the last days`` () = 
-        let dateFrom = System.DateTime.Now.AddDays(-3.0)
-        let dateTo = System.DateTime.Now
+        let timeInterval = 
+            { From = System.DateTime.Now.AddDays(-3.0)
+              To = System.DateTime.Now }
         
         DataUploader.uploadData
             Settings.ConnectionStrings.WeatherStation 
-            dateFrom 
-            dateTo 
+            timeInterval
             (getTestDeviceInfo())
             Settings.StationId
         |> ResultUtils.get

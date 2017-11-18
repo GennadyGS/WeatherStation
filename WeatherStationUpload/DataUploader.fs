@@ -5,11 +5,10 @@ open DataCollector
 
 let uploadData
         (connectionString : string)
-        (fromDate: DateTime) 
-        (toDate: DateTime) 
+        (timeInterval : TimeInterval)
         (deviceInfo: DeviceInfo)
         (stationId: int) =
-    collectData fromDate toDate deviceInfo
+    collectData timeInterval deviceInfo
     |> List.map (fun measurement -> stationId, measurement)
     |> DatabaseUtils.writeDataContextForList 
         DbService.insertMeasurement connectionString

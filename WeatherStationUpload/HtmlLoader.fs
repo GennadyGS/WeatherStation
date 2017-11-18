@@ -15,8 +15,7 @@ let private checkStatusCode statusCode =
         failwith (sprintf "Status code %A received" statusCode)
 
 let loadHtmlDocument
-        (fromDate : DateTime) 
-        (toDate : DateTime) 
+        (timeInterval : TimeInterval) 
         (deviceInfo : DeviceInfo)
         (pageSize: int)
         (page: int): HtmlDocument = 
@@ -28,7 +27,7 @@ let loadHtmlDocument
              ("pageSize", pageSize |> string)
              ("page", page |> string)
              ("appBundle", "eu.mobile_alerts.mobilealerts")
-             ("fromEpoch", fromDate |> toEpoch |> string)
-             ("toEpoch", toDate |> toEpoch |> string)])
+             ("fromEpoch", timeInterval.From |> toEpoch |> string)
+             ("toEpoch", timeInterval.To |> toEpoch |> string)])
     checkStatusCode (enum statusCode)
     HtmlDocument.Load responceStream
