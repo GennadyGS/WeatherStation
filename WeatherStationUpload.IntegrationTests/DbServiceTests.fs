@@ -46,11 +46,8 @@ type DbServiceTests() =
         saveMeasurements measurements
         
         let result = 
-            readDataContext 
-                DbService.getMeasurements connectionString
-            |> Result.map 
-                (fun measurements -> 
-                    List.map (fun measurement -> measurement.Data) measurements)
+            readDataContext DbService.getMeasurements connectionString
+            |> Result.map (List.map snd)
         
         let expectedResult = measurements |> sortMeasurements |> Ok
         Assert.Equal(expectedResult, result |> Result.map sortMeasurements)

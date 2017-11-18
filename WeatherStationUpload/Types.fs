@@ -18,7 +18,3 @@ type MeasurementData =
 type DeviceInfo = 
     { VendorId: Guid
       DeviceId: string }
-
-type Measurement = 
-    { Device: DeviceInfo
-      Data: MeasurementData }
