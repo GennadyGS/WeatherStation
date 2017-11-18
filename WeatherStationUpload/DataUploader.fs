@@ -11,5 +11,5 @@ let uploadData
     collectData fromDate toDate deviceInfo
     |> List.map (fun measurement -> deviceInfo, measurement)
     |> DatabaseUtils.writeDataContextForList 
-        DbService.insertMeasurementData connectionString
+        DbService.insertMeasurement connectionString
     

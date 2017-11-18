@@ -13,7 +13,7 @@ type DbServiceTests() =
     let connectionString = Settings.ConnectionStrings.WeatherStation
     let testDeviceInfo = getTestDeviceInfo()
 
-    let getSampleMeasurements () : MeasurementData list = 
+    let getSampleMeasurements () : Measurement list = 
         [ 
             { TemperatureInside = Some 19.2m<C>
               TemperatureOutside = Some -12.3m<C>
@@ -27,19 +27,19 @@ type DbServiceTests() =
               Timestamp = DateTime(2017, 11, 18, 11, 02, 03) }
         ]
 
-    let sortMeasurements (measurements : MeasurementData list) : MeasurementData list = 
+    let sortMeasurements (measurements : Measurement list) : Measurement list = 
         measurements |> List.sortBy (fun measurement -> measurement.Timestamp)
     
     let saveMeasurement measurement =
         (testDeviceInfo, measurement)
-        |> DatabaseUtils.writeDataContext DbService.insertMeasurementData connectionString 
+        |> DatabaseUtils.writeDataContext DbService.insertMeasurement connectionString 
         |> ResultUtils.get
 
     let saveMeasurements measurements =
         measurements
         |> List.map (fun measurement -> (testDeviceInfo, measurement))
         |> DatabaseUtils.writeDataContextForList 
-            DbService.insertMeasurementData connectionString 
+            DbService.insertMeasurement connectionString 
         |> ResultUtils.get
     
     let testSaveMeasurements measurements = 

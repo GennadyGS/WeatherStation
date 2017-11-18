@@ -21,7 +21,7 @@ type DataContext private (innerDataContext : SqlProvider.dataContext) =
 
         dataContext.InnerDataContext.SubmitUpdates()
 
-let insertMeasurementData (dataContext : DataContext) (deviceInfo : DeviceInfo, measurement : MeasurementData) : unit =
+let insertMeasurement (dataContext : DataContext) (deviceInfo : DeviceInfo, measurement : Measurement) : unit =
     let row = dataContext.InnerDataContext.Dbo.Observations.Create()
     row.DeviceId <- deviceInfo.DeviceId
     row.VendorId <- deviceInfo.VendorId
@@ -33,7 +33,7 @@ let insertMeasurementData (dataContext : DataContext) (deviceInfo : DeviceInfo, 
 
 [<ReflectedDefinition>]
 let private entityToMeasurement 
-        (entity : SqlProvider.dataContext.``dbo.ObservationsEntity``) : DeviceInfo * MeasurementData = 
+        (entity : SqlProvider.dataContext.``dbo.ObservationsEntity``) : DeviceInfo * Measurement = 
     { VendorId = entity.VendorId
       DeviceId = entity.DeviceId },
     { Timestamp = entity.Timestamp 
@@ -42,7 +42,7 @@ let private entityToMeasurement
       TemperatureOutside = entity.TemperatureOutside |> Option.map valueToCelsius
       HumidityOutside = entity.HumidityOutside |> Option.map valueToPercent }
 
-let getMeasurements (dataContext : DataContext) : Result<(DeviceInfo * MeasurementData) list, string> = 
+let getMeasurements (dataContext : DataContext) : Result<(DeviceInfo * Measurement) list, string> = 
     query {
         for measurement in dataContext.InnerDataContext.Dbo.Observations do
         sortBy measurement.VendorId
