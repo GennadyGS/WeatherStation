@@ -11,7 +11,7 @@ let private collectDataPage fromDate toDate deviceInfo pageSize page =
     loadHtmlDocument fromDate toDate deviceInfo pageSize page
     |> parseHtmlDocument 
 
-let collectData (fromDate: DateTime) (toDate: DateTime) (deviceInfo: DeviceInfo): MeasurementData list =
+let collectData (fromDate: DateTime) (toDate: DateTime) (deviceInfo: DeviceInfo): Measurement list =
     let rec collectDataFromPage fromDate toDate deviceInfo pageSize startPage = 
         seq {
             let measurements = collectDataPage fromDate toDate deviceInfo pageSize startPage

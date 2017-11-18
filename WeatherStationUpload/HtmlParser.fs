@@ -24,7 +24,7 @@ let private parseHumidity str =
         (HumidityRegex().TypedMatch(str).Humidity.Value)
     |> Option.map valueToPercent
 
-let parseHtmlDocument (htmlDocument : HtmlDocument): MeasurementData list = 
+let parseHtmlDocument (htmlDocument : HtmlDocument): Measurement list = 
     let table = htmlDocument.Descendants("table") |> Seq.head
     let tBody = (table.Descendants("tbody") |> Seq.exactlyOne)
     tBody.Descendants("tr")
