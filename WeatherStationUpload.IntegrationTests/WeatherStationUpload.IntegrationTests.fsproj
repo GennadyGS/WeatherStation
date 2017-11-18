@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="Utils.fs" />
     <Compile Include="DbTests.fs" />
     <Compile Include="DbServiceTests.fs" />
     <Compile Include="DataCollectorTests.fs" />
