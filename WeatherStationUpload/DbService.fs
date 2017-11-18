@@ -3,6 +3,7 @@
 open FSharp.Data.Sql
 open System.Linq
 open MeasureUtils
+open WeatherStationUpload.DatabaseUtils
 
 type private SqlProvider = 
     SqlDataProvider<
@@ -24,10 +25,10 @@ let insertMeasurement (dataContext : DataContext) (measurement : Measurement) : 
     let row = dataContext.InnerDataContext.Dbo.Observations.Create()
     row.DeviceId <- measurement.Device.DeviceId
     row.VendorId <- measurement.Device.VendorId
-    row.HumidityInside <- measurement.Data.HumidityInside |> Option.map unwrapPercent
-    row.HumidityOutside <- measurement.Data.HumidityOutside |> Option.map unwrapPercent
-    row.TemperatureInside <- measurement.Data.TemperatureInside |> Option.map unwrapCelsius
-    row.TemperatureOutside <- measurement.Data.TemperatureOutside |> Option.map unwrapCelsius
+    row.HumidityInside <- measurement.Data.HumidityInside |> Option.map percentToValue
+    row.HumidityOutside <- measurement.Data.HumidityOutside |> Option.map percentToValue
+    row.TemperatureInside <- measurement.Data.TemperatureInside |> Option.map celsiusToValue
+    row.TemperatureOutside <- measurement.Data.TemperatureOutside |> Option.map celsiusToValue
     row.Timestamp <- measurement.Data.Timestamp
 
 [<ReflectedDefinition>]
@@ -38,12 +39,12 @@ let private entityToMeasurement
           DeviceId = entity.DeviceId }
       Data = 
         { Timestamp = entity.Timestamp 
-          TemperatureInside = entity.TemperatureInside |> Option.map wrapCelsius
-          HumidityInside = entity.HumidityInside |> Option.map wrapPercent
-          TemperatureOutside = entity.TemperatureOutside |> Option.map wrapCelsius
-          HumidityOutside = entity.HumidityOutside |> Option.map wrapPercent }}
+          TemperatureInside = entity.TemperatureInside |> Option.map valueToCelsius
+          HumidityInside = entity.HumidityInside |> Option.map valueToPercent
+          TemperatureOutside = entity.TemperatureOutside |> Option.map valueToCelsius
+          HumidityOutside = entity.HumidityOutside |> Option.map valueToPercent }}
 
-let getMeasurements (dataContext : DataContext) : IQueryable<Measurement> = 
+let getMeasurements (dataContext : DataContext) : Result<Measurement list, string> = 
     query {
         for measurement in dataContext.InnerDataContext.Dbo.Observations do
         sortBy measurement.VendorId
@@ -51,3 +52,4 @@ let getMeasurements (dataContext : DataContext) : IQueryable<Measurement> =
         thenByDescending measurement.Timestamp
         select (entityToMeasurement measurement)
     }
+    |> runQuerySafe
