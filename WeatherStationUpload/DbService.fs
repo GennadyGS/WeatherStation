@@ -21,15 +21,15 @@ type DataContext private (innerDataContext : SqlProvider.dataContext) =
 
         dataContext.InnerDataContext.SubmitUpdates()
 
-let insertMeasurement (dataContext : DataContext) (measurement : Measurement) : unit =
+let insertMeasurementData (dataContext : DataContext) (deviceInfo : DeviceInfo, measurement : MeasurementData) : unit =
     let row = dataContext.InnerDataContext.Dbo.Observations.Create()
-    row.DeviceId <- measurement.Device.DeviceId
-    row.VendorId <- measurement.Device.VendorId
-    row.HumidityInside <- measurement.Data.HumidityInside |> Option.map percentToValue
-    row.HumidityOutside <- measurement.Data.HumidityOutside |> Option.map percentToValue
-    row.TemperatureInside <- measurement.Data.TemperatureInside |> Option.map celsiusToValue
-    row.TemperatureOutside <- measurement.Data.TemperatureOutside |> Option.map celsiusToValue
-    row.Timestamp <- measurement.Data.Timestamp
+    row.DeviceId <- deviceInfo.DeviceId
+    row.VendorId <- deviceInfo.VendorId
+    row.HumidityInside <- measurement.HumidityInside |> Option.map percentToValue
+    row.HumidityOutside <- measurement.HumidityOutside |> Option.map percentToValue
+    row.TemperatureInside <- measurement.TemperatureInside |> Option.map celsiusToValue
+    row.TemperatureOutside <- measurement.TemperatureOutside |> Option.map celsiusToValue
+    row.Timestamp <- measurement.Timestamp
 
 [<ReflectedDefinition>]
 let private entityToMeasurement 
