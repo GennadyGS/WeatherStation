@@ -33,18 +33,16 @@ let insertMeasurementData (dataContext : DataContext) (deviceInfo : DeviceInfo, 
 
 [<ReflectedDefinition>]
 let private entityToMeasurement 
-        (entity : SqlProvider.dataContext.``dbo.ObservationsEntity``) : Measurement = 
-    { Device = 
-        { VendorId = entity.VendorId
-          DeviceId = entity.DeviceId }
-      Data = 
-        { Timestamp = entity.Timestamp 
-          TemperatureInside = entity.TemperatureInside |> Option.map valueToCelsius
-          HumidityInside = entity.HumidityInside |> Option.map valueToPercent
-          TemperatureOutside = entity.TemperatureOutside |> Option.map valueToCelsius
-          HumidityOutside = entity.HumidityOutside |> Option.map valueToPercent }}
+        (entity : SqlProvider.dataContext.``dbo.ObservationsEntity``) : DeviceInfo * MeasurementData = 
+    { VendorId = entity.VendorId
+      DeviceId = entity.DeviceId },
+    { Timestamp = entity.Timestamp 
+      TemperatureInside = entity.TemperatureInside |> Option.map valueToCelsius
+      HumidityInside = entity.HumidityInside |> Option.map valueToPercent
+      TemperatureOutside = entity.TemperatureOutside |> Option.map valueToCelsius
+      HumidityOutside = entity.HumidityOutside |> Option.map valueToPercent }
 
-let getMeasurements (dataContext : DataContext) : Result<Measurement list, string> = 
+let getMeasurements (dataContext : DataContext) : Result<(DeviceInfo * MeasurementData) list, string> = 
     query {
         for measurement in dataContext.InnerDataContext.Dbo.Observations do
         sortBy measurement.VendorId
