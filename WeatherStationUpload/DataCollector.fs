@@ -7,16 +7,16 @@ open System
 [<Literal>]
 let private maxPageSize = 250;
 
-let private collectDataPage fromDate toDate deviceInfo pageSize page = 
-    loadHtmlDocument fromDate toDate deviceInfo pageSize page
+let private collectDataPage timeInterval deviceInfo pageSize page = 
+    loadHtmlDocument timeInterval deviceInfo pageSize page
     |> parseHtmlDocument 
 
-let collectData (fromDate: DateTime) (toDate: DateTime) (deviceInfo: DeviceInfo): Measurement list =
-    let rec collectDataFromPage fromDate toDate deviceInfo pageSize startPage = 
+let collectData (timeInterval : TimeInterval) (deviceInfo: DeviceInfo): Measurement list =
+    let rec collectDataFromPage timeInterval deviceInfo pageSize startPage = 
         seq {
-            let measurements = collectDataPage fromDate toDate deviceInfo pageSize startPage
+            let measurements = collectDataPage timeInterval deviceInfo pageSize startPage
             yield measurements
             if measurements.Length >= pageSize then
-                yield! collectDataFromPage fromDate toDate deviceInfo pageSize (startPage + 1)
+                yield! collectDataFromPage timeInterval deviceInfo pageSize (startPage + 1)
         }
-    collectDataFromPage fromDate toDate deviceInfo maxPageSize 1 |> List.concat
+    collectDataFromPage timeInterval deviceInfo maxPageSize 1 |> List.concat

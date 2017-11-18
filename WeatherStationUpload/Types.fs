@@ -8,6 +8,10 @@ type ``%``
 [<Measure>] 
 type C
 
+type TimeInterval = 
+    { From: DateTime
+      To: DateTime }
+
 type Measurement = 
     { Timestamp: DateTime
       TemperatureInside: decimal<C> option
