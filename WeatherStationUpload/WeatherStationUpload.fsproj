@@ -63,8 +63,7 @@
     <Compile Include="HtmlParser.fs" />
     <Compile Include="DbService.fs" />
     <Compile Include="DataCollector.fs" />
-    <Compile Include="Composite.fs" />
-    <Compile Include="Main.fs" />
+    <Compile Include="DataUploader.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>
