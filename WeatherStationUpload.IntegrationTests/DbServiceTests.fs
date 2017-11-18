@@ -12,6 +12,7 @@ type DbServiceTests() =
     
     let connectionString = Settings.ConnectionStrings.WeatherStation
     let testDeviceInfo = getTestDeviceInfo()
+    let testStationId = Settings.StationId
 
     let getSampleMeasurements () : Measurement list = 
         [ 
@@ -31,13 +32,13 @@ type DbServiceTests() =
         measurements |> List.sortBy (fun measurement -> measurement.Timestamp)
     
     let saveMeasurement measurement =
-        (testDeviceInfo, measurement)
+        (testStationId, measurement)
         |> DatabaseUtils.writeDataContext DbService.insertMeasurement connectionString 
         |> ResultUtils.get
 
     let saveMeasurements measurements =
         measurements
-        |> List.map (fun measurement -> (testDeviceInfo, measurement))
+        |> List.map (fun measurement -> (testStationId, measurement))
         |> DatabaseUtils.writeDataContextForList 
             DbService.insertMeasurement connectionString 
         |> ResultUtils.get
@@ -53,9 +54,9 @@ type DbServiceTests() =
         Assert.Equal(expectedResult, result |> Result.map sortMeasurements)
 
     [<Fact>]
-    let ``SaveObservations should save empty list of observation correctly``() = 
+    let ``SaveMeasurements should save empty list of observation correctly``() = 
         testSaveMeasurements []
 
     [<Fact>]
-    let ``SaveObservations should save observations correctly``() = 
+    let ``SaveMeasurements should save measurements correctly``() = 
         testSaveMeasurements (getSampleMeasurements())
