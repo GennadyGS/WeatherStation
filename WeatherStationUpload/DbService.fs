@@ -3,6 +3,7 @@
 open FSharp.Data.Sql
 open MeasureUtils
 open WeatherStationUpload.DatabaseUtils
+open System
 
 type private SqlProvider = 
     SqlDataProvider<
@@ -47,3 +48,6 @@ let getMeasurements (dataContext : DataContext) : list<StationId * Measurement> 
         select (entityToMeasurement measurement)
     }
     |> runQuery
+
+let getStationsInfo (dataContext : DataContext) : list<StationId * DeviceInfo * DateTime option> = 
+    failwith "Not imlemented"

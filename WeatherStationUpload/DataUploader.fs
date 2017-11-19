@@ -1,6 +1,5 @@
 ﻿module WeatherStationUpload.DataUploader
 
-open System
 open DataCollector
 
 let uploadData
