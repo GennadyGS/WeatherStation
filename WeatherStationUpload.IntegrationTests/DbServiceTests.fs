@@ -5,7 +5,6 @@ open WeatherStationUpload.DatabaseUtils
 open WeatherStationUpload
 open Xunit
 open Utils
-open WeatherStationUpload.ResultUtils
 
 type DbServiceTests() =
     inherit DbTests()
@@ -33,24 +32,22 @@ type DbServiceTests() =
     let saveMeasurement measurement =
         (testStationId, measurement)
         |> DatabaseUtils.writeDataContext DbService.insertMeasurement connectionString 
-        |> ResultUtils.get
 
     let saveMeasurements measurements =
         measurements
         |> List.map (fun measurement -> (testStationId, measurement))
         |> DatabaseUtils.writeDataContextForList 
             DbService.insertMeasurement connectionString 
-        |> ResultUtils.get
     
     let testSaveMeasurements measurements = 
         saveMeasurements measurements
         
         let result = 
             readDataContext DbService.getMeasurements connectionString
-            |> Result.map (List.map snd)
+            |> List.map snd
         
-        let expectedResult = measurements |> sortMeasurements |> Ok
-        Assert.Equal(expectedResult, result |> Result.map sortMeasurements)
+        let expectedResult = measurements |> sortMeasurements
+        Assert.Equal<Measurement list>(expectedResult, result |> sortMeasurements)
 
     [<Fact>]
     let ``SaveMeasurements should save empty list of observation correctly``() = 
