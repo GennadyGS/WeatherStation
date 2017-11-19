@@ -39,11 +39,11 @@ let private entityToMeasurement
       TemperatureOutside = entity.TemperatureOutside |> Option.map valueToCelsius
       HumidityOutside = entity.HumidityOutside |> Option.map valueToPercent }
 
-let getMeasurements (dataContext : DataContext) : Result<list<StationId * Measurement>, string> = 
+let getMeasurements (dataContext : DataContext) : list<StationId * Measurement> = 
     query {
         for measurement in dataContext.InnerDataContext.Dbo.Measurements do
         sortBy measurement.StationId
         thenByDescending measurement.Timestamp
         select (entityToMeasurement measurement)
     }
-    |> runQuerySafe
+    |> runQuery

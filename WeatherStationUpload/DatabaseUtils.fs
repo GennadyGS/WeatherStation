@@ -15,6 +15,9 @@ let handleSqlException func =
         with
             | :? SqlException as e -> Error (e.ToString())
 
+let runQuery query = 
+    query |> Seq.toList
+
 let runQuerySafe query = 
     query
     |> handleSqlException Seq.toList
@@ -30,7 +33,16 @@ let inline writeDataContext (func : 'dc -> 'a -> unit) =
     createDataContext >>
     fun dataContext a -> 
         func dataContext a
+        saveChangesToDataContext dataContext
+
+let inline writeDataContextSafe (func : 'dc -> 'a -> unit) = 
+    createDataContext >>
+    fun dataContext a -> 
+        func dataContext a
         saveChangesSafe dataContext
 
 let inline writeDataContextForList (func : 'dc -> 'a -> unit) = 
     writeDataContext (fun dataContext -> List.map (func dataContext) >> ignore)
+
+let inline writeDataContextForListSafe (func : 'dc -> 'a -> unit) = 
+    writeDataContextSafe (fun dataContext -> List.map (func dataContext) >> ignore)

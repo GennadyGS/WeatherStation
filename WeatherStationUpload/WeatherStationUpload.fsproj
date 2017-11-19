@@ -55,7 +55,6 @@
   <ItemGroup>
     <None Include="Script.fsx" />
     <Compile Include="Types.fs" />
-    <Compile Include="ResultUtils.fs" />
     <Compile Include="MeasureUtils.fs" />
     <Compile Include="DatabaseUtils.fs" />
     <Compile Include="TryParser.fs" />

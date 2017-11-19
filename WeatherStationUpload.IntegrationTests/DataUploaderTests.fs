@@ -19,12 +19,10 @@ type DataUploaderTests() =
             timeInterval
             (getTestDeviceInfo())
             (getTestStationId())
-        |> ResultUtils.get
 
         let measurements =
             DatabaseUtils.readDataContext 
                 DbService.getMeasurements 
                 Settings.ConnectionStrings.WeatherStation
-            |> ResultUtils.get
 
         Assert.True(measurements.Length > 250)
