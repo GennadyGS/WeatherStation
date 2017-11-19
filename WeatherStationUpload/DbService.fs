@@ -49,5 +49,53 @@ let getMeasurements (dataContext : DataContext) : list<StationId * Measurement> 
     }
     |> runQuery
 
-let getStationsInfo (dataContext : DataContext) : list<StationId * DeviceInfo * DateTime option> = 
+let getStationsInfo (dataContext : DataContext) 
+        : list<StationId * DeviceInfo * DateTime option> = 
     failwith "Not imlemented"
+
+let toOption item = 
+    if (isNull (box item)) then None else Some(item)
+
+let getStationMeasurements (dataContext : DataContext) =
+    query {
+        for station in dataContext.InnerDataContext.Dbo.Stations do
+        sortBy station.Id
+        for measurement in (!!)station.``dbo.Measurements by Id`` do
+        select (station.Id, Some measurement)
+        //select 
+        //    (if measurement.StationId <> 0 then
+        //        (station.Id, Some (measurement.Timestamp))
+        //    else
+        //        (station.Id, None))
+    }
+    |> runQuery
+
+
+let getStationsInfo2 (dataContext : DataContext) 
+        : list<StationId * DateTime option> = 
+    let stationMeasurementTimesQuery = 
+        query {
+            for station in dataContext.InnerDataContext.Dbo.Stations do
+            sortBy station.Id
+            for measurement in (!!)station.``dbo.Measurements by Id`` do
+            select 
+                (if measurement.StationId <> 0 then
+                    (station.Id, Some (measurement.Timestamp))
+                else
+                    (station.Id, None))
+                //(if station.Id = measurement.StationId then
+                //    (station.Id, Some (measurement.Timestamp))
+                //else
+                //    (station.Id, None))
+        }
+    
+    query {
+        for (stationId, measurementTime) in stationMeasurementTimesQuery do
+        groupBy stationId into group
+        let maxMeasurementTime = query {
+            for (_, measurementTime) in group do
+            maxBy measurementTime
+        }
+        select (StationId group.Key, maxMeasurementTime)
+    }
+    |> runQuery

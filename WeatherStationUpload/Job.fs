@@ -5,7 +5,8 @@ open System
 let execute 
         (connectionString: string) 
         (intervalEndTime: DateTime)
-        (maxTimeInterval: TimeSpan) : unit = 
+        (maxTimeInterval: TimeSpan) 
+        : unit = 
     let getIntervalStartTime = function
         | Some time -> time
         | None -> intervalEndTime.Add(-maxTimeInterval)

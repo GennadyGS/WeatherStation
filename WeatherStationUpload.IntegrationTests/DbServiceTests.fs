@@ -9,7 +9,7 @@ open Utils
 type DbServiceTests() =
     inherit DbTests()
     
-    let connectionString = Settings.ConnectionStrings.WeatherStation
+    let testConnectionString = Settings.ConnectionStrings.WeatherStation
     let testStationId = getTestStationId()
 
     let getSampleMeasurements () : Measurement list = 
@@ -31,19 +31,19 @@ type DbServiceTests() =
     
     let saveMeasurement measurement =
         (testStationId, measurement)
-        |> DatabaseUtils.writeDataContext DbService.insertMeasurement connectionString 
+        |> DatabaseUtils.writeDataContext DbService.insertMeasurement testConnectionString 
 
     let saveMeasurements measurements =
         measurements
         |> List.map (fun measurement -> (testStationId, measurement))
         |> DatabaseUtils.writeDataContextForList 
-            DbService.insertMeasurement connectionString 
+            DbService.insertMeasurement testConnectionString 
     
     let testSaveMeasurements measurements = 
         saveMeasurements measurements
         
         let result = 
-            readDataContext DbService.getMeasurements connectionString
+            readDataContext DbService.getMeasurements testConnectionString
             |> List.map snd
         
         let expectedResult = measurements |> sortMeasurements
@@ -56,3 +56,17 @@ type DbServiceTests() =
     [<Fact>]
     let ``SaveMeasurements should save measurements correctly``() = 
         testSaveMeasurements (getSampleMeasurements())
+
+    [<Fact>]
+    let ``getStationMeasurements``() = 
+        let results = 
+            DatabaseUtils.readDataContext 
+                DbService.getStationMeasurements testConnectionString
+        Assert.NotEmpty(results)
+
+    [<Fact>]
+    let ``getStationsInfo2``() = 
+        let results = 
+            DatabaseUtils.readDataContext 
+                DbService.getStationsInfo2 testConnectionString
+        Assert.NotEmpty(results)
