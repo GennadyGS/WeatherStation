@@ -21,6 +21,7 @@ type DataContext private (innerDataContext : SqlProvider.dataContext) =
 
         dataContext.InnerDataContext.SubmitUpdates()
 
+[<ReflectedDefinition>]
 let private defaultToOption (item: 'a) = 
     if item <> Unchecked.defaultof<'a> then Some(item) else None
 
@@ -52,26 +53,26 @@ let getMeasurements (dataContext : DataContext) : list<StationId * Measurement> 
     }
     |> runQuery
 
-let getStationsInfo (dataContext : DataContext) 
-        : list<StationId * DeviceInfo * DateTime option> = 
-    failwith "Not imlemented"
+let getStationsLastMeasurements (dataContext : DataContext): list<StationId * DeviceInfo * DateTime option> =
+    let stationMeasurementTimesQuery = 
+        query {
+            for station in dataContext.InnerDataContext.Dbo.Stations do
+            sortBy station.Id
+            for measurement in (!!)station.``dbo.Measurements by Id`` do
+            select (station, defaultToOption measurement.Timestamp)
+        }
 
-let private getStationMeasurementTimesQuery (dataContext : DataContext) = 
+    let getDeviceInfo (stationEntity: SqlProvider.dataContext.``dbo.StationsEntity``) = 
+        { VendorId = stationEntity.VendorId
+          DeviceId = stationEntity.DeviceId }
+    
     query {
-        for station in dataContext.InnerDataContext.Dbo.Stations do
-        sortBy station.Id
-        for measurement in (!!)station.``dbo.Measurements by Id`` do
-        select (station.Id, defaultToOption measurement.Timestamp)
-    }
-
-let getLastMeasurements (dataContext : DataContext): list<StationId * DateTime Option> =
-    query {
-        for (stationId, measurement) in getStationMeasurementTimesQuery(dataContext) do
-        groupBy stationId into group
+        for (station, measurement) in stationMeasurementTimesQuery do
+        groupBy (station.Id, getDeviceInfo(station)) into group
         let maxMeasurementTime = query {
             for (_, measurementTime) in group do
             maxBy measurementTime
         }
-        select (StationId group.Key, maxMeasurementTime)
+        select (StationId (fst group.Key), (snd group.Key), maxMeasurementTime)
     }
     |> runQuery

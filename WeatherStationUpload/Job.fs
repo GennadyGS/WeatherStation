@@ -12,7 +12,7 @@ let execute
         | None -> intervalEndTime.Add(-maxTimeInterval)
     
     DatabaseUtils.readDataContext 
-        DbService.getStationsInfo connectionString
+        DbService.getStationsLastMeasurements connectionString
     |> List.map 
         (fun (stationId, deviceInfo, lastMeasurementTime) -> 
             DataUploader.uploadData 

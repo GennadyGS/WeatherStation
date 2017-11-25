@@ -58,23 +58,23 @@ type DbServiceTests() =
         testSaveMeasurements (getSampleMeasurements())
 
     [<Fact>]
-    let ``getLastMeasurements returns one record with empty time for empty database``() = 
+    let ``getStationsLastMeasurements returns one record with empty time for empty database``() = 
         let results = 
             DatabaseUtils.readDataContext 
-                DbService.getLastMeasurements testConnectionString
+                DbService.getStationsLastMeasurements testConnectionString
         
-        Assert.True((results = [testStationId, None]))
+        Assert.True((results = [testStationId, getTestDeviceInfo(), None]))
 
     [<Fact>]
-    let ``getLastMeasurements returns correct last measurement time``() = 
+    let ``getStationsLastMeasurements returns correct last measurement time``() = 
         saveMeasurements (getSampleMeasurements())
         
         let results = 
             DatabaseUtils.readDataContext 
-                DbService.getLastMeasurements testConnectionString
+                DbService.getStationsLastMeasurements testConnectionString
         
         let maxSampleMeasurementTime = 
             getSampleMeasurements() 
             |> List.map (fun item -> item.Timestamp)
             |> List.max
-        Assert.True((results = [testStationId, Some maxSampleMeasurementTime]))
+        Assert.True((results = [testStationId, getTestDeviceInfo(), Some maxSampleMeasurementTime]))
