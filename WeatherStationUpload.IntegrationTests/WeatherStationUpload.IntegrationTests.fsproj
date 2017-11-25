@@ -101,6 +101,7 @@
     <Compile Include="DbServiceTests.fs" />
     <Compile Include="DataCollectorTests.fs" />
     <Compile Include="DataUploaderTests.fs" />
+    <Compile Include="JobTests.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>
