@@ -73,6 +73,7 @@ let getStationsLastMeasurements (dataContext : DataContext): list<StationId * De
             for (_, measurementTime) in group do
             maxBy measurementTime
         }
-        select (StationId (fst group.Key), (snd group.Key), maxMeasurementTime)
+        let (stationId, deviceInfo) = group.Key
+        select (StationId stationId, deviceInfo, maxMeasurementTime)
     }
     |> runQuery
