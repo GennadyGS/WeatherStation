@@ -21,6 +21,9 @@ type DataContext private (innerDataContext : SqlProvider.dataContext) =
 
         dataContext.InnerDataContext.SubmitUpdates()
 
+let private defaultToOption (item: 'a) = 
+    if item <> Unchecked.defaultof<'a> then Some(item) else None
+
 let insertMeasurement (dataContext : DataContext) (StationId stationId, measurement : Measurement) : unit =
     let row = dataContext.InnerDataContext.Dbo.Measurements.Create()
     row.StationId <- stationId
@@ -53,44 +56,17 @@ let getStationsInfo (dataContext : DataContext)
         : list<StationId * DeviceInfo * DateTime option> = 
     failwith "Not imlemented"
 
-let toOption item = 
-    if (isNull (box item)) then None else Some(item)
-
-let getStationMeasurements (dataContext : DataContext) =
+let private getStationMeasurementTimesQuery (dataContext : DataContext) = 
     query {
         for station in dataContext.InnerDataContext.Dbo.Stations do
         sortBy station.Id
         for measurement in (!!)station.``dbo.Measurements by Id`` do
-        select (station.Id, Some measurement)
-        //select 
-        //    (if measurement.StationId <> 0 then
-        //        (station.Id, Some (measurement.Timestamp))
-        //    else
-        //        (station.Id, None))
+        select (station.Id, defaultToOption measurement.Timestamp)
     }
-    |> runQuery
 
-
-let getStationsInfo2 (dataContext : DataContext) 
-        : list<StationId * DateTime option> = 
-    let stationMeasurementTimesQuery = 
-        query {
-            for station in dataContext.InnerDataContext.Dbo.Stations do
-            sortBy station.Id
-            for measurement in (!!)station.``dbo.Measurements by Id`` do
-            select 
-                (if measurement.StationId <> 0 then
-                    (station.Id, Some (measurement.Timestamp))
-                else
-                    (station.Id, None))
-                //(if station.Id = measurement.StationId then
-                //    (station.Id, Some (measurement.Timestamp))
-                //else
-                //    (station.Id, None))
-        }
-    
+let getLastMeasurements (dataContext : DataContext): list<StationId * DateTime Option> =
     query {
-        for (stationId, measurementTime) in stationMeasurementTimesQuery do
+        for (stationId, measurement) in getStationMeasurementTimesQuery(dataContext) do
         groupBy stationId into group
         let maxMeasurementTime = query {
             for (_, measurementTime) in group do
