@@ -8,7 +8,7 @@ let execute
         (maxTimeInterval: TimeSpan) 
         : unit = 
     let getIntervalStartTime = function
-        | Some (time: DateTime) -> time + TimeSpan.FromMinutes(1.0)
+        | Some (time: DateTime) -> time + TimeSpan.FromSeconds(1.0)
         | None -> intervalEndTime.Add(-maxTimeInterval)
     
     DatabaseUtils.readDataContext 
