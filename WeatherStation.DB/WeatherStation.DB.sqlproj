@@ -70,5 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="WeatherStations.DB.publish.publish.xml" />
+    <None Include="WeatherStations.DB.Azure.publish.publish.xml" />
   </ItemGroup>
 </Project>
