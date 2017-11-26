@@ -8,6 +8,8 @@ open WeatherStationUpload
 open WeatherStationUpload.IntegrationTests
 
 type DataUploaderTests() = 
+    inherit DbTests()
+
     [<Fact>]
     member this.``UploadData should upload data correctly for the last days`` () = 
         let timeInterval = 
