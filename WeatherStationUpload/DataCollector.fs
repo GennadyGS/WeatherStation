@@ -23,3 +23,4 @@ let collectData (timeInterval : TimeInterval) (deviceInfo: DeviceInfo): Measurem
         time >= interval.From && time <= interval.To
     collectDataFromPage timeInterval deviceInfo maxPageSize 1 |> List.concat
     |> List.filter (fun measurement -> timeInsideInterval timeInterval measurement.Timestamp )
+    |> List.distinctBy (fun measurement -> measurement.Timestamp)
