@@ -19,4 +19,7 @@ let collectData (timeInterval : TimeInterval) (deviceInfo: DeviceInfo): Measurem
             if measurements.Length >= pageSize then
                 yield! collectDataFromPage timeInterval deviceInfo pageSize (startPage + 1)
         }
+    let timeInsideInterval interval time = 
+        time >= interval.From && time <= interval.To
     collectDataFromPage timeInterval deviceInfo maxPageSize 1 |> List.concat
+    |> List.filter (fun measurement -> timeInsideInterval timeInterval measurement.Timestamp )
