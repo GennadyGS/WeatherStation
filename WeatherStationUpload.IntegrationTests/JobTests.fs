@@ -2,9 +2,7 @@
 
 open Xunit
 open WeatherStationUpload
-open Utils
 open System
-open WeatherStationUpload.DatabaseUtils
 
 type JobTests() =
     inherit DbTests()
