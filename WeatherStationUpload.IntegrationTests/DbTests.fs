@@ -1,15 +1,12 @@
 ﻿namespace WeatherStationUpload.IntegrationTests
 
-open FSharp.Data.Sql.Providers
-
 type DbTests () =
     let executeSqlCommand sql = 
-        using 
-            (MSSqlServer.createConnection Settings.ConnectionStrings.WeatherStation)
-            (fun connection -> 
-                connection.Open()
-                let command = MSSqlServer.createCommand sql connection
-                command.ExecuteNonQuery())
+        use connection = new System.Data.SqlClient.SqlConnection(Settings.ConnectionStrings.WeatherStation)
+        connection.Open()
+        let command = connection.CreateCommand()
+        command.CommandText <- sql
+        command.ExecuteNonQuery() |> ignore
     
     do
         try
