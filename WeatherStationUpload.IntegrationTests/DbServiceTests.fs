@@ -31,13 +31,12 @@ type DbServiceTests() =
     
     let saveMeasurement measurement =
         (testStationId, measurement)
-        |> DatabaseUtils.writeDataContext DbService.insertMeasurement testConnectionString 
+        |> DbService.insertMeasurement testConnectionString 
 
     let saveMeasurements measurements =
         measurements
         |> List.map (fun measurement -> (testStationId, measurement))
-        |> DatabaseUtils.writeDataContextForList 
-            DbService.insertMeasurement testConnectionString 
+        |> DbService.insertMeasurements testConnectionString 
     
     let testSaveMeasurements measurements = 
         saveMeasurements measurements

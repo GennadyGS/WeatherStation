@@ -9,8 +9,7 @@ open FSharp.Data
 let devConnectionString =
     @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=WeatherStation;Integrated Security=True"
 
-type MeasurementRecord = SqlCommandProvider<"
-        SELECT * FROM Measurements ORDER BY StationId", devConnectionString>.Record
+type WeatherStation = SqlProgrammabilityProvider<devConnectionString>
 
 type private SqlProvider = 
     SqlDataProvider<
@@ -28,18 +27,35 @@ type DataContext private (innerDataContext : SqlProvider.dataContext) =
 
         dataContext.InnerDataContext.SubmitUpdates()
 
-let insertMeasurement (dataContext : DataContext) (StationId stationId, measurement : Measurement) : unit =
-    let row = dataContext.InnerDataContext.Dbo.Measurements.Create()
-    row.StationId <- stationId
-    row.HumidityInside <- measurement.HumidityInside |> Option.map percentToValue
-    row.HumidityOutside <- measurement.HumidityOutside |> Option.map percentToValue
-    row.TemperatureInside <- measurement.TemperatureInside |> Option.map celsiusToValue
-    row.TemperatureOutside <- measurement.TemperatureOutside |> Option.map celsiusToValue
-    row.Timestamp <- measurement.Timestamp
+let insertMeasurement (connectionString: string) (StationId stationId, measurement: Measurement) : unit =
+    let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
+    measurementsTable.AddRow(
+        stationId,
+        measurement.Timestamp,
+        TemperatureInside = (measurement.TemperatureInside |> Option.map celsiusToValue),
+        TemperatureOutside = (measurement.TemperatureOutside |> Option.map celsiusToValue),
+        HumidityInside = (measurement.HumidityInside |> Option.map percentToValue),
+        HumidityOutside = (measurement.HumidityOutside |> Option.map percentToValue))
+    measurementsTable.Update() |> ignore
+
+let insertMeasurements (connectionString: string) (measurements: list<StationId * Measurement>) : unit =
+    let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
+    measurements
+    |> List.map (
+        fun (StationId stationId, measurement) ->
+            measurementsTable.AddRow(
+                stationId,
+                measurement.Timestamp,
+                TemperatureInside = (measurement.TemperatureInside |> Option.map celsiusToValue),
+                TemperatureOutside = (measurement.TemperatureOutside |> Option.map celsiusToValue),
+                HumidityInside = (measurement.HumidityInside |> Option.map percentToValue),
+                HumidityOutside = (measurement.HumidityOutside |> Option.map percentToValue)))
+    |> ignore
+    measurementsTable.BulkCopy()
 
 let getMeasurements (connectionString: string) : list<StationId * Measurement> = 
     use cmd = new SqlCommandProvider<"
-        SELECT * FROM Measurements ORDER BY StationId", devConnectionString>(connectionString);
+        SELECT * FROM dbo.Measurements ORDER BY StationId", devConnectionString>(connectionString);
 
     cmd.Execute() 
     |> Seq.map (
