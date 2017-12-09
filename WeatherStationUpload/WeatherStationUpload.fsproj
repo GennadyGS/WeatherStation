@@ -64,7 +64,6 @@
     <Compile Include="DataUploader.fs" />
     <Compile Include="Job.fs" />
     <None Include="paket.references" />
-    <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
