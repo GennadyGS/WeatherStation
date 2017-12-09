@@ -1,7 +1,6 @@
 ﻿namespace WeatherStationUpload.IntegrationTests
 
 open System
-open WeatherStationUpload.DatabaseUtils
 open WeatherStationUpload
 open Xunit
 open Utils
