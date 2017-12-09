@@ -43,7 +43,7 @@ type DbServiceTests() =
         saveMeasurements measurements
         
         let result = 
-            readDataContext DbService.getMeasurements testConnectionString
+            DbService.getMeasurements testConnectionString
             |> List.map snd
         
         let expectedResult = measurements |> sortMeasurements
