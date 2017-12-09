@@ -68,8 +68,4 @@
   <ItemGroup>
     <RefactorLog Include="WeatherStation.DB.refactorlog" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="WeatherStations.DB.Local.publish.xml" />
-    <None Include="WeatherStations.DB.Azure.publish.xml" />
-  </ItemGroup>
 </Project>
