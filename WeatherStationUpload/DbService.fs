@@ -2,13 +2,15 @@
 
 open FSharp.Data.Sql
 open MeasureUtils
-open WeatherStationUpload.DatabaseUtils
 open System
 open FSharp.Data
 
 [<Literal>]
 let devConnectionString =
     @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=WeatherStation;Integrated Security=True"
+
+type MeasurementRecord = SqlCommandProvider<"
+        SELECT * FROM Measurements ORDER BY StationId", devConnectionString>.Record
 
 type private SqlProvider = 
     SqlDataProvider<
@@ -26,10 +28,6 @@ type DataContext private (innerDataContext : SqlProvider.dataContext) =
 
         dataContext.InnerDataContext.SubmitUpdates()
 
-[<ReflectedDefinition>]
-let private defaultToOption (item: 'a) = 
-    if item <> Unchecked.defaultof<'a> then Some(item) else None
-
 let insertMeasurement (dataContext : DataContext) (StationId stationId, measurement : Measurement) : unit =
     let row = dataContext.InnerDataContext.Dbo.Measurements.Create()
     row.StationId <- stationId
@@ -38,16 +36,6 @@ let insertMeasurement (dataContext : DataContext) (StationId stationId, measurem
     row.TemperatureInside <- measurement.TemperatureInside |> Option.map celsiusToValue
     row.TemperatureOutside <- measurement.TemperatureOutside |> Option.map celsiusToValue
     row.Timestamp <- measurement.Timestamp
-
-[<ReflectedDefinition>]
-let private entityToMeasurement 
-        (entity : SqlProvider.dataContext.``dbo.MeasurementsEntity``) : StationId * Measurement = 
-    StationId entity.StationId,
-    { Timestamp = entity.Timestamp 
-      TemperatureInside = entity.TemperatureInside |> Option.map valueToCelsius
-      HumidityInside = entity.HumidityInside |> Option.map valueToPercent
-      TemperatureOutside = entity.TemperatureOutside |> Option.map valueToCelsius
-      HumidityOutside = entity.HumidityOutside |> Option.map valueToPercent }
 
 let getMeasurements (connectionString: string) : list<StationId * Measurement> = 
     use cmd = new SqlCommandProvider<"
@@ -64,27 +52,18 @@ let getMeasurements (connectionString: string) : list<StationId * Measurement> =
               HumidityOutside = record.HumidityOutside |> Option.map valueToPercent })
     |> Seq.toList
 
-let getStationsLastMeasurements (dataContext : DataContext): list<StationId * DeviceInfo * DateTime option> =
-    let stationMeasurementTimesQuery = 
-        query {
-            for station in dataContext.InnerDataContext.Dbo.Stations do
-            sortBy station.Id
-            for measurement in (!!)station.``dbo.Measurements by Id`` do
-            select (station, defaultToOption measurement.Timestamp)
-        }
-
-    let getDeviceInfo (stationEntity: SqlProvider.dataContext.``dbo.StationsEntity``) = 
-        { VendorId = stationEntity.VendorId
-          DeviceId = stationEntity.DeviceId }
-    
-    query {
-        for (station, measurement) in stationMeasurementTimesQuery do
-        groupBy (station.Id, getDeviceInfo(station)) into group
-        let maxMeasurementTime = query {
-            for (_, measurementTime) in group do
-            maxBy measurementTime
-        }
-        let (stationId, deviceInfo) = group.Key
-        select (StationId stationId, deviceInfo, maxMeasurementTime)
-    }
-    |> runQuery
+let getStationsLastMeasurements (connectionString: string): list<StationId * DeviceInfo * DateTime option> =
+    use cmd = new SqlCommandProvider<"
+            SELECT s.Id stationId, s.DeviceId, s.VendorId, MAX(m.Timestamp) Timestamp FROM dbo.Stations s
+            LEFT OUTER JOIN dbo.Measurements m ON s.Id = m.StationId
+            GROUP BY s.Id, s.DeviceId, s.VendorId
+            ", devConnectionString>(connectionString)
+    cmd.Execute()
+    |> Seq.map(fun record ->
+            StationId record.stationId,
+            {
+                DeviceId = record.DeviceId
+                VendorId = record.VendorId
+            },
+            record.Timestamp)
+    |> Seq.toList

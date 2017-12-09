@@ -60,8 +60,7 @@ type DbServiceTests() =
     [<Fact>]
     let ``getStationsLastMeasurements returns one record with empty time for empty database``() = 
         let results = 
-            DatabaseUtils.readDataContext 
-                DbService.getStationsLastMeasurements testConnectionString
+            DbService.getStationsLastMeasurements testConnectionString
         
         Assert.True((results = [testStationId, getTestDeviceInfo(), None]))
 
@@ -70,8 +69,7 @@ type DbServiceTests() =
         saveMeasurements (getSampleMeasurements())
         
         let results = 
-            DatabaseUtils.readDataContext 
-                DbService.getStationsLastMeasurements testConnectionString
+            DbService.getStationsLastMeasurements testConnectionString
         
         let maxSampleMeasurementTime = 
             getSampleMeasurements() 
