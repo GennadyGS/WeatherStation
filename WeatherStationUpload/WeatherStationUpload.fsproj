@@ -56,7 +56,6 @@
     <None Include="Script.fsx" />
     <Compile Include="Types.fs" />
     <Compile Include="MeasureUtils.fs" />
-    <Compile Include="DatabaseUtils.fs" />
     <Compile Include="TryParser.fs" />
     <Compile Include="HtmlLoader.fs" />
     <Compile Include="HtmlParser.fs" />
