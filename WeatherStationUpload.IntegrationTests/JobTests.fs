@@ -18,10 +18,10 @@ type JobTests() =
     
         Job.execute testConnectionString (testTime.AddDays(-1.0)) maxTimeInterval
 
-        let result1 = readDataContext DbService.getMeasurements testConnectionString
+        let result1 = DbService.getMeasurements testConnectionString
         Assert.True (result1.Length > 250)
 
         Job.execute testConnectionString testTime maxTimeInterval
 
-        let result2 = readDataContext DbService.getMeasurements testConnectionString
+        let result2 = DbService.getMeasurements testConnectionString
         Assert.True (result2.Length > result1.Length)

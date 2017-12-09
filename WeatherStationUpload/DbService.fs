@@ -4,6 +4,11 @@ open FSharp.Data.Sql
 open MeasureUtils
 open WeatherStationUpload.DatabaseUtils
 open System
+open FSharp.Data
+
+[<Literal>]
+let devConnectionString =
+    @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=WeatherStation;Integrated Security=True"
 
 type private SqlProvider = 
     SqlDataProvider<
@@ -44,14 +49,20 @@ let private entityToMeasurement
       TemperatureOutside = entity.TemperatureOutside |> Option.map valueToCelsius
       HumidityOutside = entity.HumidityOutside |> Option.map valueToPercent }
 
-let getMeasurements (dataContext : DataContext) : list<StationId * Measurement> = 
-    query {
-        for measurement in dataContext.InnerDataContext.Dbo.Measurements do
-        sortBy measurement.StationId
-        thenByDescending measurement.Timestamp
-        select (entityToMeasurement measurement)
-    }
-    |> runQuery
+let getMeasurements (connectionString: string) : list<StationId * Measurement> = 
+    use cmd = new SqlCommandProvider<"
+        SELECT * FROM Measurements ORDER BY StationId", devConnectionString>(connectionString);
+
+    cmd.Execute() 
+    |> Seq.map (
+        fun record -> 
+            StationId record.StationId,
+            { Timestamp = record.Timestamp 
+              TemperatureInside = record.TemperatureInside |> Option.map valueToCelsius
+              HumidityInside = record.HumidityInside |> Option.map valueToPercent
+              TemperatureOutside = record.TemperatureOutside |> Option.map valueToCelsius
+              HumidityOutside = record.HumidityOutside |> Option.map valueToPercent })
+    |> Seq.toList
 
 let getStationsLastMeasurements (dataContext : DataContext): list<StationId * DeviceInfo * DateTime option> =
     let stationMeasurementTimesQuery = 

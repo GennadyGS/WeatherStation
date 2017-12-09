@@ -22,9 +22,6 @@ type DataUploaderTests() =
             (getTestDeviceInfo())
             (getTestStationId())
 
-        let measurements =
-            DatabaseUtils.readDataContext 
-                DbService.getMeasurements 
-                Settings.ConnectionStrings.WeatherStation
+        let measurements = DbService.getMeasurements Settings.ConnectionStrings.WeatherStation
 
         Assert.True(measurements.Length > 250)
