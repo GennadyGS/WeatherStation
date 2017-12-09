@@ -1,9 +1,9 @@
 ﻿module WeatherStationUpload.DbService
 
-open FSharp.Data.Sql
+open FSharp.Data
 open MeasureUtils
 open System
-open FSharp.Data
+open System.Data.SqlClient
 
 [<Literal>]
 let devConnectionString =
@@ -11,23 +11,8 @@ let devConnectionString =
 
 type WeatherStation = SqlProgrammabilityProvider<devConnectionString>
 
-type private SqlProvider = 
-    SqlDataProvider<
-        ConnectionStringName = "WeatherStation",
-        UseOptionTypes = true>
-
-type DataContext private (innerDataContext : SqlProvider.dataContext) = 
-    member internal this.InnerDataContext: SqlProvider.dataContext = innerDataContext
-    
-    static member Create (connectionString: string) = 
-        DataContext(SqlProvider.GetDataContext(connectionString))
-    
-    static member SaveChanges (dataContext : DataContext) = 
-        let d: SqlProvider.dataContext = SqlProvider.GetDataContext("");
-
-        dataContext.InnerDataContext.SubmitUpdates()
-
 let insertMeasurement (connectionString: string) (StationId stationId, measurement: Measurement) : unit =
+    use connection = new SqlConnection(connectionString)
     let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
     measurementsTable.AddRow(
         stationId,
@@ -36,9 +21,10 @@ let insertMeasurement (connectionString: string) (StationId stationId, measureme
         TemperatureOutside = (measurement.TemperatureOutside |> Option.map celsiusToValue),
         HumidityInside = (measurement.HumidityInside |> Option.map percentToValue),
         HumidityOutside = (measurement.HumidityOutside |> Option.map percentToValue))
-    measurementsTable.Update() |> ignore
+    measurementsTable.Update(connection) |> ignore
 
 let insertMeasurements (connectionString: string) (measurements: list<StationId * Measurement>) : unit =
+    use connection = new SqlConnection(connectionString)
     let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
     measurements
     |> List.map (
@@ -51,7 +37,7 @@ let insertMeasurements (connectionString: string) (measurements: list<StationId 
                 HumidityInside = (measurement.HumidityInside |> Option.map percentToValue),
                 HumidityOutside = (measurement.HumidityOutside |> Option.map percentToValue)))
     |> ignore
-    measurementsTable.BulkCopy()
+    measurementsTable.BulkCopy(connection)
 
 let getMeasurements (connectionString: string) : list<StationId * Measurement> = 
     use cmd = new SqlCommandProvider<"
