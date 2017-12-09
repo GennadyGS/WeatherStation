@@ -9,7 +9,6 @@ let uploadData
         (stationId: StationId) : unit =
     collectData timeInterval deviceInfo
     |> List.map (fun measurement -> stationId, measurement)
-    |> DatabaseUtils.writeDataContextForList 
-        DbService.insertMeasurement connectionString
+    |> DbService.insertMeasurements connectionString
 
     
