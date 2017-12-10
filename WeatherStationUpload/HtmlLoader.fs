@@ -31,3 +31,23 @@ let loadHtmlDocument
              ("toEpoch", timeInterval.To |> toEpoch |> string)])
     checkStatusCode (enum statusCode)
     HtmlDocument.Load responceStream
+
+let loadHtmlDocumentAsync
+        (timeInterval : TimeInterval) 
+        (deviceInfo : DeviceInfo)
+        (pageSize: int)
+        (page: int): Async<HtmlDocument> = 
+    async {
+        let! ({ StatusCode = statusCode; ResponseStream = responceStream }) = 
+            Http.AsyncRequestStream(url, body = FormValues
+                [("deviceId", deviceInfo.DeviceId)
+                 ("vendorId", deviceInfo.VendorId.ToString())
+                 ("command", "refresh")
+                 ("pageSize", pageSize |> string)
+                 ("page", page |> string)
+                 ("appBundle", "eu.mobile_alerts.mobilealerts")
+                 ("fromEpoch", timeInterval.From |> toEpoch |> string)
+                 ("toEpoch", timeInterval.To |> toEpoch |> string)])
+        checkStatusCode (enum statusCode)
+        return HtmlDocument.Load responceStream
+    }

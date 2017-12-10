@@ -11,6 +11,10 @@ let private collectDataPage timeInterval deviceInfo pageSize page =
     loadHtmlDocument timeInterval deviceInfo pageSize page
     |> parseHtmlDocument 
 
+let private collectDataPageAsync timeInterval deviceInfo pageSize page = 
+    loadHtmlDocumentAsync timeInterval deviceInfo pageSize page
+    |> AsyncUtils.map parseHtmlDocument 
+
 let collectData (timeInterval : TimeInterval) (deviceInfo: DeviceInfo): Measurement list =
     let rec collectDataFromPage timeInterval deviceInfo pageSize startPage = 
         seq {
