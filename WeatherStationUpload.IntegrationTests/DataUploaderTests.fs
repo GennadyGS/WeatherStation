@@ -6,6 +6,7 @@ open Xunit
 
 open WeatherStationUpload
 open WeatherStationUpload.IntegrationTests
+open FsUnit.Xunit
 
 type DataUploaderTests() = 
     inherit DbTests()
@@ -24,4 +25,4 @@ type DataUploaderTests() =
 
         let measurements = DbService.getMeasurements Settings.ConnectionStrings.WeatherStation
 
-        Assert.True(measurements.Length > 250)
+        measurements.Length |> should be (greaterThan 250)
