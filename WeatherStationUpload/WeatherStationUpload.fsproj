@@ -48,6 +48,7 @@
   <ItemGroup>
     <None Include="Script.fsx" />
     <Compile Include="Types.fs" />
+    <Compile Include="AsyncUtils.fs" />
     <Compile Include="MeasureUtils.fs" />
     <Compile Include="TryParser.fs" />
     <Compile Include="HtmlLoader.fs" />
