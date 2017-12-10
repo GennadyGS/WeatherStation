@@ -3,6 +3,7 @@
 open Xunit
 open WeatherStationUpload
 open System
+open FsUnit.Xunit
 
 type JobTests() =
     inherit DbTests()
@@ -22,4 +23,4 @@ type JobTests() =
         Job.execute testConnectionString testTime maxTimeInterval
 
         let result2 = DbService.getMeasurements testConnectionString
-        Assert.True (result2.Length > result1.Length)
+        result2.Length |> should be (greaterThan result1.Length)

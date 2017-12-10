@@ -4,6 +4,7 @@ open Xunit
 open WeatherStationUpload
 open System
 open Utils
+open FsUnit.Xunit
 
 type DataCollectorTests() = 
     [<Fact>]
@@ -14,4 +15,4 @@ type DataCollectorTests() =
         
         let result = DataCollector.collectData timeInterval (getTestDeviceInfo())
         
-        Assert.True (result.Length > 250)
+        result.Length |> should be (greaterThan 250)

@@ -4,6 +4,7 @@ open System
 open WeatherStationUpload
 open Xunit
 open Utils
+open FsUnit.Xunit
 
 type DbServiceTests() =
     inherit DbTests()
@@ -44,8 +45,7 @@ type DbServiceTests() =
             DbService.getMeasurements testConnectionString
             |> List.map snd
         
-        let expectedResult = measurements |> sortMeasurements
-        Assert.Equal<Measurement list>(expectedResult, result |> sortMeasurements)
+        result |> should equal (measurements |> sortMeasurements)
 
     [<Fact>]
     let ``SaveMeasurements should save empty list of observation correctly``() = 
@@ -60,7 +60,7 @@ type DbServiceTests() =
         let results = 
             DbService.getStationsLastMeasurements testConnectionString
         
-        Assert.True((results = [testStationId, getTestDeviceInfo(), None]))
+        results = [testStationId, getTestDeviceInfo(), None] |> should be True
 
     [<Fact>]
     let ``getStationsLastMeasurements returns correct last measurement time``() = 
@@ -73,4 +73,5 @@ type DbServiceTests() =
             getSampleMeasurements() 
             |> List.map (fun item -> item.Timestamp)
             |> List.max
-        Assert.True((results = [testStationId, getTestDeviceInfo(), Some maxSampleMeasurementTime]))
+
+        results |> should equal [testStationId, getTestDeviceInfo(), Some maxSampleMeasurementTime]
