@@ -1,4 +1,5 @@
 FSharp.Core
 xunit
 xunit.runner.visualstudio
+FsUnit.xUnit
 FSharp.Configuration
