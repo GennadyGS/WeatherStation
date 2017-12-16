@@ -17,12 +17,15 @@ type DataUploaderTests() =
             { From = System.DateTime.Now.AddDays(-3.0)
               To = System.DateTime.Now }
         
-        DataUploader.uploadData
-            Settings.ConnectionStrings.WeatherStation 
-            timeInterval
-            (getTestDeviceInfo())
-            (getTestStationId())
+        async {
+            do! DataUploader.uploadDataAsync
+                    Settings.ConnectionStrings.WeatherStation 
+                    timeInterval
+                    (getTestDeviceInfo())
+                    (getTestStationId())
 
-        let measurements = DbService.getMeasurements Settings.ConnectionStrings.WeatherStation
+            let! measurements = DbService.getMeasurementsAsync Settings.ConnectionStrings.WeatherStation
 
-        measurements.Length |> should be (greaterThan 250)
+            measurements.Length |> should be (greaterThan 250)
+        }
+        |> Async.RunSynchronously
