@@ -31,18 +31,21 @@ type DbServiceTests() =
     
     let saveMeasurement measurement =
         (testStationId, measurement)
-        |> DbService.insertMeasurement testConnectionString 
+        |> DbService.insertMeasurementAsync testConnectionString 
+        |> Async.RunSynchronously
 
     let saveMeasurements measurements =
         measurements
         |> List.map (fun measurement -> (testStationId, measurement))
-        |> DbService.insertMeasurements testConnectionString 
+        |> DbService.insertMeasurementsAsync testConnectionString 
+        |> Async.RunSynchronously
     
     let testSaveMeasurements measurements = 
         saveMeasurements measurements
         
         let result = 
-            DbService.getMeasurements testConnectionString
+            DbService.getMeasurementsAsync testConnectionString
+            |> Async.RunSynchronously
             |> List.map snd
         
         result |> should equal (measurements |> sortMeasurements)
@@ -58,7 +61,8 @@ type DbServiceTests() =
     [<Fact>]
     let ``getStationsLastMeasurements returns one record with empty time for empty database``() = 
         let results = 
-            DbService.getStationsLastMeasurements testConnectionString
+            DbService.getStationsLastMeasurementsAsync testConnectionString
+            |> Async.RunSynchronously
         
         results = [testStationId, getTestDeviceInfo(), None] |> should be True
 
@@ -67,7 +71,8 @@ type DbServiceTests() =
         saveMeasurements (getSampleMeasurements())
         
         let results = 
-            DbService.getStationsLastMeasurements testConnectionString
+            DbService.getStationsLastMeasurementsAsync testConnectionString
+            |> Async.RunSynchronously
         
         let maxSampleMeasurementTime = 
             getSampleMeasurements() 
