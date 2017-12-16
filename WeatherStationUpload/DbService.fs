@@ -24,16 +24,18 @@ let insertMeasurement (connectionString: string) (StationId stationId, measureme
     measurementsTable.Update(connection) |> ignore
 
 let insertMeasurementAsync (connectionString: string) (StationId stationId, measurement: Measurement) : Async<unit> =
-    use connection = new SqlConnection(connectionString)
-    let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
-    measurementsTable.AddRow(
-        stationId,
-        measurement.Timestamp,
-        TemperatureInside = (measurement.TemperatureInside |> Option.map celsiusToValue),
-        TemperatureOutside = (measurement.TemperatureOutside |> Option.map celsiusToValue),
-        HumidityInside = (measurement.HumidityInside |> Option.map percentToValue),
-        HumidityOutside = (measurement.HumidityOutside |> Option.map percentToValue))
-    async { return measurementsTable.Update(connection) }
+    async { 
+        use connection = new SqlConnection(connectionString)
+        let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
+        measurementsTable.AddRow(
+            stationId,
+            measurement.Timestamp,
+            TemperatureInside = (measurement.TemperatureInside |> Option.map celsiusToValue),
+            TemperatureOutside = (measurement.TemperatureOutside |> Option.map celsiusToValue),
+            HumidityInside = (measurement.HumidityInside |> Option.map percentToValue),
+            HumidityOutside = (measurement.HumidityOutside |> Option.map percentToValue))
+        return measurementsTable.Update(connection)
+    }
     |> AsyncUtils.map ignore
 
 let insertMeasurements (connectionString: string) (measurements: list<StationId * Measurement>) : unit =
@@ -53,20 +55,22 @@ let insertMeasurements (connectionString: string) (measurements: list<StationId 
     measurementsTable.BulkCopy(connection)
 
 let insertMeasurementsAsync (connectionString: string) (measurements: list<StationId * Measurement>) : Async<unit> =
-    use connection = new SqlConnection(connectionString)
-    let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
-    measurements
-        |> List.map 
-            (fun (StationId stationId, measurement) ->
-                measurementsTable.AddRow(
-                    stationId,
-                    measurement.Timestamp,
-                    TemperatureInside = (measurement.TemperatureInside |> Option.map celsiusToValue),
-                    TemperatureOutside = (measurement.TemperatureOutside |> Option.map celsiusToValue),
-                    HumidityInside = (measurement.HumidityInside |> Option.map percentToValue),
-                    HumidityOutside = (measurement.HumidityOutside |> Option.map percentToValue)))
-        |> ignore
-    async { return measurementsTable.BulkCopy(connection) }
+    async { 
+        use connection = new SqlConnection(connectionString)
+        let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
+        measurements
+            |> List.map 
+                (fun (StationId stationId, measurement) ->
+                    measurementsTable.AddRow(
+                        stationId,
+                        measurement.Timestamp,
+                        TemperatureInside = (measurement.TemperatureInside |> Option.map celsiusToValue),
+                        TemperatureOutside = (measurement.TemperatureOutside |> Option.map celsiusToValue),
+                        HumidityInside = (measurement.HumidityInside |> Option.map percentToValue),
+                        HumidityOutside = (measurement.HumidityOutside |> Option.map percentToValue)))
+            |> ignore
+        return measurementsTable.BulkCopy(connection)
+    }
     |> AsyncUtils.map ignore
 
 let getMeasurements (connectionString: string) : list<StationId * Measurement> = 
