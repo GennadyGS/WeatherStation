@@ -3,6 +3,7 @@
 open HtmlLoader
 open HtmlParser
 open System
+open FSharp.Control
 
 [<Literal>]
 let private maxPageSize = 250;
@@ -25,9 +26,20 @@ let collectData (timeInterval : TimeInterval) (deviceInfo: DeviceInfo): Measurem
         }
     let timeInsideInterval interval time = 
         time >= interval.From && time <= interval.To
-    collectDataFromPage timeInterval deviceInfo maxPageSize 1 |> List.concat
-    |> List.filter (fun measurement -> timeInsideInterval timeInterval measurement.Timestamp )
+    collectDataFromPage timeInterval deviceInfo maxPageSize 1 
+    |> List.concat
+    |> List.filter (fun measurement -> timeInsideInterval timeInterval measurement.Timestamp)
     |> List.distinctBy (fun measurement -> measurement.Timestamp)
 
 let collectDataAsync (timeInterval : TimeInterval) (deviceInfo: DeviceInfo): Async<Measurement list> =
-    failwith "Not implemented"
+    AsyncSeq.unfoldAsync
+        (fun page ->
+            async {
+                let! measurements = collectDataPageAsync timeInterval deviceInfo maxPageSize page
+                if measurements.Length >= maxPageSize then
+                    return Some (measurements, page + 1)
+                else return None
+            })
+        0
+    |> AsyncSeq.concatSeq
+    |> AsyncSeq.toListAsync
