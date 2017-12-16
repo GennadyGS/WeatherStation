@@ -28,3 +28,6 @@ let collectData (timeInterval : TimeInterval) (deviceInfo: DeviceInfo): Measurem
     collectDataFromPage timeInterval deviceInfo maxPageSize 1 |> List.concat
     |> List.filter (fun measurement -> timeInsideInterval timeInterval measurement.Timestamp )
     |> List.distinctBy (fun measurement -> measurement.Timestamp)
+
+let collectDataAsync (timeInterval : TimeInterval) (deviceInfo: DeviceInfo): Async<Measurement list> =
+    failwith "Not implemented"

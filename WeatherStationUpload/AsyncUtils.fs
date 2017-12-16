@@ -1,6 +1,15 @@
 ﻿module WeatherStationUpload.AsyncUtils
 
-let map f arg = async {
-    let! x = arg 
-    return f x
+let retn arg = async {
+    return arg
+}
+
+let map f argAsync = async {
+    let! arg = argAsync 
+    return f arg
+}
+
+let bind f argAsync = async {
+    let! arg = argAsync 
+    return! f arg
 }
