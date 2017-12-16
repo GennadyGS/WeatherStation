@@ -3,3 +3,4 @@ FSharp.Data
 FSharp.Text.RegexProvider
 FSharp.Data.SqlClient
 FSharp.Control.AsyncSeq
+Serilog
