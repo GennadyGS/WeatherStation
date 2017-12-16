@@ -8,5 +8,6 @@ nuget FSharp.Data.SqlClient
 nuget FSharp.Control.AsyncSeq
 nuget FsUnit.xUnit
 nuget Serilog
+nuget Serilog.Sinks.Console
 nuget xunit
 nuget xunit.runner.visualstudio version_in_path: true

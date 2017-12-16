@@ -4,3 +4,4 @@ xunit.runner.visualstudio
 FsUnit.xUnit
 FSharp.Configuration
 Serilog
+Serilog.Sinks.Console
