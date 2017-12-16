@@ -40,8 +40,8 @@ let insertMeasurements (connectionString: string) (measurements: list<StationId 
     use connection = new SqlConnection(connectionString)
     let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
     measurements
-        |> List.map (
-            fun (StationId stationId, measurement) ->
+        |> List.map 
+            (fun (StationId stationId, measurement) ->
                 measurementsTable.AddRow(
                     stationId,
                     measurement.Timestamp,
@@ -56,8 +56,8 @@ let insertMeasurementsAsync (connectionString: string) (measurements: list<Stati
     use connection = new SqlConnection(connectionString)
     let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
     measurements
-        |> List.map (
-            fun (StationId stationId, measurement) ->
+        |> List.map 
+            (fun (StationId stationId, measurement) ->
                 measurementsTable.AddRow(
                     stationId,
                     measurement.Timestamp,
@@ -74,8 +74,8 @@ let getMeasurements (connectionString: string) : list<StationId * Measurement> =
         SELECT * FROM dbo.Measurements ORDER BY StationId", devConnectionString>(connectionString);
 
     cmd.Execute() 
-    |> Seq.map (
-        fun record -> 
+    |> Seq.map 
+        (fun record -> 
             StationId record.StationId,
             { Timestamp = record.Timestamp 
               TemperatureInside = record.TemperatureInside |> Option.map valueToCelsius
@@ -89,14 +89,15 @@ let getMeasurementsAsync (connectionString: string) : Async<list<StationId * Mea
         SELECT * FROM dbo.Measurements ORDER BY StationId", devConnectionString>(connectionString);
 
     cmd.AsyncExecute() 
-    |> AsyncUtils.map (Seq.map (
-        fun record -> 
-            StationId record.StationId,
-            { Timestamp = record.Timestamp 
-              TemperatureInside = record.TemperatureInside |> Option.map valueToCelsius
-              HumidityInside = record.HumidityInside |> Option.map valueToPercent
-              TemperatureOutside = record.TemperatureOutside |> Option.map valueToCelsius
-              HumidityOutside = record.HumidityOutside |> Option.map valueToPercent }))
+    |> AsyncUtils.map 
+        (Seq.map 
+            (fun record -> 
+                StationId record.StationId,
+                { Timestamp = record.Timestamp 
+                  TemperatureInside = record.TemperatureInside |> Option.map valueToCelsius
+                  HumidityInside = record.HumidityInside |> Option.map valueToPercent
+                  TemperatureOutside = record.TemperatureOutside |> Option.map valueToCelsius
+                  HumidityOutside = record.HumidityOutside |> Option.map valueToPercent }))
     |> AsyncUtils.map Seq.toList
 
 let getStationsLastMeasurements (connectionString: string): list<StationId * DeviceInfo * DateTime option> =
@@ -106,7 +107,8 @@ let getStationsLastMeasurements (connectionString: string): list<StationId * Dev
             GROUP BY s.Id, s.DeviceId, s.VendorId
             ", devConnectionString>(connectionString)
     cmd.Execute()
-    |> Seq.map(fun record ->
+    |> Seq.map
+        (fun record ->
             StationId record.stationId,
             {
                 DeviceId = record.DeviceId
