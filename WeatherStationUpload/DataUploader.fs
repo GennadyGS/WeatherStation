@@ -2,15 +2,6 @@
 
 open DataCollector
 
-let uploadData
-        (connectionString : string)
-        (timeInterval : TimeInterval)
-        (deviceInfo: DeviceInfo)
-        (stationId: StationId) : unit =
-    collectData timeInterval deviceInfo
-    |> List.map (fun measurement -> stationId, measurement)
-    |> DbService.insertMeasurements connectionString
-
 let uploadDataAsync
         (connectionString : string)
         (timeInterval : TimeInterval)

@@ -18,12 +18,12 @@ type JobTests() =
     
             do! Job.executeAsync testConnectionString (testTime.AddDays(-1.0)) maxTimeInterval
 
-            let result1 = DbService.getMeasurements testConnectionString
+            let! result1 = DbService.getMeasurementsAsync testConnectionString
             Assert.True (result1.Length > 250)
 
             do! Job.executeAsync testConnectionString testTime maxTimeInterval
 
-            let result2 = DbService.getMeasurements testConnectionString
+            let! result2 = DbService.getMeasurementsAsync testConnectionString
             result2.Length |> should be (greaterThan result1.Length)
         }
         |> Async.RunSynchronously
