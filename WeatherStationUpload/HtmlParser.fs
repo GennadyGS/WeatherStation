@@ -38,5 +38,3 @@ let parseHtmlDocument (htmlDocument : HtmlDocument): Measurement list =
                   HumidityOutside = tdHumidityOutside.InnerText() |> parseHumidity }
             | _ -> failwith "Parsing error")
     |> Seq.toList
-
-
