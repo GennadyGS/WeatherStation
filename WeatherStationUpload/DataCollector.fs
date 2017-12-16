@@ -36,10 +36,10 @@ let collectDataAsync (timeInterval : TimeInterval) (deviceInfo: DeviceInfo): Asy
         (fun page ->
             async {
                 let! measurements = collectDataPageAsync timeInterval deviceInfo maxPageSize page
-                if measurements.Length >= maxPageSize then
+                if measurements.Length > 0 then
                     return Some (measurements, page + 1)
                 else return None
             })
-        0
+        1
     |> AsyncSeq.concatSeq
     |> AsyncSeq.toListAsync

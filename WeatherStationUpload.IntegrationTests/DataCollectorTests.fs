@@ -13,6 +13,8 @@ type DataCollectorTests() =
             { From = System.DateTime.Now.AddDays(-3.0)
               To = System.DateTime.Now }
         
-        let result = DataCollector.collectData timeInterval (getTestDeviceInfo())
+        let result = 
+            DataCollector.collectDataAsync timeInterval (getTestDeviceInfo())
+            |> Async.RunSynchronously
         
         result.Length |> should be (greaterThan 250)
