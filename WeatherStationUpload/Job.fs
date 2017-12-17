@@ -15,12 +15,17 @@ let executeAsync
     |> AsyncUtils.bind(
         List.map 
             (fun (stationId, deviceInfo, lastMeasurementTime) -> 
-                DataUploader.uploadDataAsync
-                    logger
-                    connectionString
-                    { From = (getIntervalStartTime lastMeasurementTime)
-                      To = intervalEndTime }
-                    deviceInfo
-                    stationId)
+                try
+                    DataUploader.uploadDataAsync
+                        logger
+                        connectionString
+                        { From = (getIntervalStartTime lastMeasurementTime)
+                          To = intervalEndTime }
+                        deviceInfo
+                        stationId
+                with
+                | _ as e -> 
+                    logger.Error(e, sprintf "Error uploading data from station %A" stationId) 
+                    |> AsyncUtils.retn )
         >> Async.Parallel 
         >> Async.Ignore)
