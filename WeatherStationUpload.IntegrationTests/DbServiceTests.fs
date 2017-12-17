@@ -53,12 +53,6 @@ type DbServiceTests() =
 
     [<Fact>]
     let ``SaveMeasurements should save empty list of observation correctly``() = 
-        let log = 
-            LoggerConfiguration()
-                .WriteTo.Console()
-                .CreateLogger();
-
-        log.Information("Hello, Serilog!");
         testSaveMeasurements []
 
     [<Fact>]
