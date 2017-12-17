@@ -19,6 +19,7 @@ type DataUploaderTests() =
         
         async {
             do! DataUploader.uploadDataAsync
+                    this.Logger
                     Settings.ConnectionStrings.WeatherStation 
                     timeInterval
                     (getTestDeviceInfo())
