@@ -1,10 +1,10 @@
 ﻿module WeatherStationUpload.Job
 
 open System
-open Serilog
+open Serilog.Core
 
 let executeAsync 
-        (logger: Core.Logger)
+        (logger: Logger)
         (connectionString: string) 
         (intervalEndTime: DateTime)
         (maxTimeInterval: TimeSpan): Async<unit> = 
@@ -16,6 +16,7 @@ let executeAsync
         List.map 
             (fun (stationId, deviceInfo, lastMeasurementTime) -> 
                 DataUploader.uploadDataAsync
+                    logger
                     connectionString
                     { From = (getIntervalStartTime lastMeasurementTime)
                       To = intervalEndTime }
