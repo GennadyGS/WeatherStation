@@ -1,6 +1,8 @@
 ﻿namespace WeatherStationUpload.IntegrationTests
 
 type DbTests () =
+    inherit BaseTests()
+
     let executeSqlCommand sql = 
         use connection = new System.Data.SqlClient.SqlConnection(Settings.ConnectionStrings.WeatherStation)
         connection.Open()

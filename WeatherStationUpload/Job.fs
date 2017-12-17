@@ -1,8 +1,10 @@
 ﻿module WeatherStationUpload.Job
 
 open System
+open Serilog
 
 let executeAsync 
+        (logger: Core.Logger)
         (connectionString: string) 
         (intervalEndTime: DateTime)
         (maxTimeInterval: TimeSpan): Async<unit> = 
