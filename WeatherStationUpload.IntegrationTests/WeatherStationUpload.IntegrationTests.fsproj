@@ -288,7 +288,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETCoreApp' And ($(TargetFrameworkVersion) == 'v1.0' Or $(TargetFrameworkVersion) == 'v1.1' Or $(TargetFrameworkVersion) == 'v2.0')">
       <ItemGroup>
         <Reference Include="Microsoft.DotNet.PlatformAbstractions">
-          <HintPath>..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.0\lib\netstandard1.3\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
+          <HintPath>..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.4\lib\netstandard1.3\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -299,7 +299,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETCoreApp' And ($(TargetFrameworkVersion) == 'v1.0' Or $(TargetFrameworkVersion) == 'v1.1' Or $(TargetFrameworkVersion) == 'v2.0')">
       <ItemGroup>
         <Reference Include="Microsoft.Extensions.DependencyModel">
-          <HintPath>..\packages\Microsoft.Extensions.DependencyModel.2.0.0\lib\netstandard1.6\Microsoft.Extensions.DependencyModel.dll</HintPath>
+          <HintPath>..\packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\netstandard1.6\Microsoft.Extensions.DependencyModel.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1734,7 +1734,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETCoreApp' And $(TargetFrameworkVersion) == 'v2.0'">
       <ItemGroup>
         <Reference Include="System.Security.AccessControl">
-          <HintPath>..\packages\System.Security.AccessControl.4.4.0\lib\netstandard2.0\System.Security.AccessControl.dll</HintPath>
+          <HintPath>..\packages\System.Security.AccessControl.4.4.1\lib\netstandard2.0\System.Security.AccessControl.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1743,7 +1743,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETCoreApp' And $(TargetFrameworkVersion) == 'v2.0'">
       <ItemGroup>
         <Reference Include="System.Security.AccessControl">
-          <HintPath>..\packages\System.Security.AccessControl.4.4.0\ref\netstandard2.0\System.Security.AccessControl.dll</HintPath>
+          <HintPath>..\packages\System.Security.AccessControl.4.4.1\ref\netstandard2.0\System.Security.AccessControl.dll</HintPath>
           <Private>False</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1939,7 +1939,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETCoreApp' And $(TargetFrameworkVersion) == 'v2.0'">
       <ItemGroup>
         <Reference Include="System.Security.Principal.Windows">
-          <HintPath>..\packages\System.Security.Principal.Windows.4.4.0\lib\netstandard2.0\System.Security.Principal.Windows.dll</HintPath>
+          <HintPath>..\packages\System.Security.Principal.Windows.4.4.1\lib\netstandard2.0\System.Security.Principal.Windows.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -1948,7 +1948,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETCoreApp' And $(TargetFrameworkVersion) == 'v2.0'">
       <ItemGroup>
         <Reference Include="System.Security.Principal.Windows">
-          <HintPath>..\packages\System.Security.Principal.Windows.4.4.0\ref\netstandard2.0\System.Security.Principal.Windows.dll</HintPath>
+          <HintPath>..\packages\System.Security.Principal.Windows.4.4.1\ref\netstandard2.0\System.Security.Principal.Windows.dll</HintPath>
           <Private>False</Private>
           <Paket>True</Paket>
         </Reference>
