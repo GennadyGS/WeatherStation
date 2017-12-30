@@ -13,3 +13,8 @@ let bind f argAsync = async {
     let! arg = argAsync 
     return! f arg
 }
+
+let runSequentially list = async {
+    for item in list do
+        return! item
+}

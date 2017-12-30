@@ -27,5 +27,4 @@ let executeAsync
                 | _ as e -> 
                     logger.Error(e, sprintf "Error uploading data from station %A" stationId) 
                     |> AsyncUtils.retn )
-        >> Async.Parallel 
-        >> Async.Ignore)
+        >> AsyncUtils.runSequentially)
