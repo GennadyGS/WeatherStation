@@ -17,6 +17,7 @@ let collectDataAsync
         (logger: Logger)
         (timeInterval : TimeInterval) 
         (deviceInfo: DeviceInfo): Async<Measurement list> =
+    logger.Information("Collecting data for device {deviceId}", deviceInfo.DeviceId)
     AsyncSeq.unfoldAsync
         (fun page ->
             async {
@@ -28,3 +29,4 @@ let collectDataAsync
         1
     |> AsyncSeq.concatSeq
     |> AsyncSeq.toListAsync
+    |> AsyncUtils.combineWithAndInore (logger.Information("Collecting data for device {deviceId} complete", deviceInfo.DeviceId))

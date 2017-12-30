@@ -8,6 +8,7 @@ let executeAsync
         (connectionString: string) 
         (intervalEndTime: DateTime)
         (maxTimeInterval: TimeSpan): Async<unit> = 
+    logger.Information("Start job; intervalEndTime: {intervalEndTime}; maxTimeInterval: {maxTimeInterval}", intervalEndTime, maxTimeInterval)
     let getIntervalStartTime = function
         | Some (time: DateTime) -> time + TimeSpan.FromSeconds(1.0)
         | None -> intervalEndTime.Add(-maxTimeInterval)
@@ -26,5 +27,6 @@ let executeAsync
                 with
                 | _ as e -> 
                     logger.Error(e, sprintf "Error uploading data from station %A" stationId) 
-                    |> AsyncUtils.retn )
+                    |> async.Return )
         >> AsyncUtils.runSequentially)
+    |> AsyncUtils.combineWithAndInore (logger.Information("Job complete"))
