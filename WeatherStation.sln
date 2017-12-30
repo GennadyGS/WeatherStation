@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{7D3E7412-1A19-44A1-B653-2F52FDDDF53B}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,6 +13,8 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherStationUpload.IntegrationTests", "WeatherStationUpload.IntegrationTests\WeatherStationUpload.IntegrationTests.fsproj", "{A48489DF-A530-4BD3-AD3C-B0A4A9EF61DC}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "WeatherStation.DB", "WeatherStation.DB\WeatherStation.DB.sqlproj", "{D9B8CD4B-1BDD-42C8-A603-EA46902AE031}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WeatherStationUploader", "WeatherStationUploader\WeatherStationUploader.fsproj", "{6C0812F9-96ED-4036-937A-5B706F2455E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +36,10 @@ Global
 		{D9B8CD4B-1BDD-42C8-A603-EA46902AE031}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9B8CD4B-1BDD-42C8-A603-EA46902AE031}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9B8CD4B-1BDD-42C8-A603-EA46902AE031}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{6C0812F9-96ED-4036-937A-5B706F2455E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C0812F9-96ED-4036-937A-5B706F2455E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C0812F9-96ED-4036-937A-5B706F2455E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C0812F9-96ED-4036-937A-5B706F2455E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
