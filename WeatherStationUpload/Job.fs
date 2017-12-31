@@ -29,4 +29,4 @@ let executeAsync
                     logger.Error(e, sprintf "Error uploading data from station %A" stationId) 
                     |> async.Return )
         >> AsyncUtils.runSequentially)
-    |> AsyncUtils.combineWithAndInore (logger.Information("Job complete"))
+    |> AsyncUtils.combineWithAndInore (fun _ -> logger.Information("Job complete"))
