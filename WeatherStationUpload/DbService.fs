@@ -37,6 +37,7 @@ let insertMeasurementsAsync
         (measurements: list<StationId * Measurement>) 
         : Async<unit> =
     async { 
+        logger.Information("Inserting {measurementCount} measurements in database", measurements.Length)
         use connection = new SqlConnection(connectionString)
         let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
         measurements
