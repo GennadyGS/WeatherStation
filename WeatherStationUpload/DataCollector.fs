@@ -13,6 +13,9 @@ let private collectDataPageAsync timeInterval deviceInfo pageSize page =
     loadHtmlDocumentAsync timeInterval deviceInfo pageSize page
     |> AsyncUtils.map parseHtmlDocument 
 
+let private timeInsideInterval interval time = 
+    time >= interval.From && time <= interval.To
+
 let collectDataAsync 
         (logger: Logger)
         (timeInterval : TimeInterval) 
@@ -29,4 +32,6 @@ let collectDataAsync
         1
     |> AsyncSeq.concatSeq
     |> AsyncSeq.toListAsync
-    |> AsyncUtils.combineWithAndInore (fun _ -> logger.Information("Collecting data for device {deviceId} complete", deviceInfo.DeviceId))
+    |> AsyncUtils.map (List.filter (fun measurement -> timeInsideInterval timeInterval measurement.Timestamp ))
+    |> AsyncUtils.map (List.distinctBy (fun measurement -> measurement.Timestamp))
+    |> AsyncUtils.combineWithAndInore (fun results -> logger.Information("Collect data for device {deviceId} complete", deviceInfo.DeviceId))
