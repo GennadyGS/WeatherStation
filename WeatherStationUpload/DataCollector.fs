@@ -34,4 +34,4 @@ let collectDataAsync
     |> AsyncSeq.toListAsync
     |> AsyncUtils.map (List.filter (fun measurement -> timeInsideInterval timeInterval measurement.Timestamp ))
     |> AsyncUtils.map (List.distinctBy (fun measurement -> measurement.Timestamp))
-    |> AsyncUtils.combineWithAndInore (fun results -> logger.Information("Collect data for device {deviceId} complete", deviceInfo.DeviceId))
+    |> AsyncUtils.combineWithAndInore (fun results -> logger.Information("Collect data for device {deviceId} complete with {measurementCount} measurements", deviceInfo.DeviceId, results.Length))
