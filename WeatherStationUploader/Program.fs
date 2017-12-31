@@ -11,10 +11,15 @@ let main argv =
         LoggerConfiguration()
             .WriteTo.Console()
             .CreateLogger();
-    Job.executeAsync 
-        logger 
-        Settings.ConnectionStrings.WeatherStation
-        DateTime.Now
-        (TimeSpan.FromDays(Settings.MaxTimeIntervalDays |> float))
-    |> Async.RunSynchronously
-    0 // return an integer exit code
+    try
+        Job.executeAsync 
+            logger 
+            Settings.ConnectionStrings.WeatherStation
+            DateTime.Now
+            (TimeSpan.FromDays(Settings.MaxTimeIntervalDays |> float))
+        |> Async.RunSynchronously
+        0
+    with
+    | _ as e -> 
+        logger.Error(e, "Unhanded exception")
+        1
