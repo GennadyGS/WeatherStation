@@ -13,7 +13,7 @@ let uploadDataAsync
     collectDataAsync logger timeInterval deviceInfo
     |> AsyncUtils.map (List.map (fun measurement -> stationId, measurement))
     |> AsyncUtils.combineWithAndInore (fun records -> logger.Information("Inserting {measurementCount} measurements in database", records.Length))
-    |> AsyncUtils.bind (DbService.insertMeasurementsAsync connectionString)
+    |> AsyncUtils.bind (DbService.insertMeasurementsAsync logger connectionString)
     |> AsyncUtils.combineWithAndInore (fun _ -> logger.Information("Upload data for station {stationId} complete", stationId))
 
     

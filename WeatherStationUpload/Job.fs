@@ -12,7 +12,7 @@ let executeAsync
     let getIntervalStartTime = function
         | Some (time: DateTime) -> time + TimeSpan.FromSeconds(1.0)
         | None -> intervalEndTime.Add(-maxTimeInterval)
-    DbService.getStationsLastMeasurementsAsync connectionString
+    DbService.getStationsLastMeasurementsAsync logger connectionString
     |> AsyncUtils.bind(
         List.map 
             (fun (stationId, deviceInfo, lastMeasurementTime) -> 
