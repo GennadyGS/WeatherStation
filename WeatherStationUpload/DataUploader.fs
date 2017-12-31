@@ -9,11 +9,11 @@ let uploadDataAsync
         (timeInterval : TimeInterval)
         (deviceInfo: DeviceInfo)
         (stationId: StationId): Async<unit> =
-    logger.Information("Upload data for station {stationId} from {from} to {to}", stationId, timeInterval.From, timeInterval.To)
+    logger.Information("Upload data for device {device} from {from} to {to}", deviceInfo.DeviceId, timeInterval.From, timeInterval.To)
     collectDataAsync logger timeInterval deviceInfo
     |> AsyncUtils.map (List.map (fun measurement -> stationId, measurement))
-    |> AsyncUtils.combineWithAndInore (logger.Information("Inserting measurements in database", stationId))
+    |> AsyncUtils.combineWithAndInore (fun _ -> logger.Information("Inserting measurements in database", stationId))
     |> AsyncUtils.bind (DbService.insertMeasurementsAsync connectionString)
-    |> AsyncUtils.combineWithAndInore (logger.Information("Upload data for station {stationId} complete", stationId))
+    |> AsyncUtils.combineWithAndInore (fun _ -> logger.Information("Upload data for station {stationId} complete", stationId))
 
     

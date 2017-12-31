@@ -29,4 +29,4 @@ let collectDataAsync
         1
     |> AsyncSeq.concatSeq
     |> AsyncSeq.toListAsync
-    |> AsyncUtils.combineWithAndInore (logger.Information("Collecting data for device {deviceId} complete", deviceInfo.DeviceId))
+    |> AsyncUtils.combineWithAndInore (fun _ -> logger.Information("Collecting data for device {deviceId} complete", deviceInfo.DeviceId))

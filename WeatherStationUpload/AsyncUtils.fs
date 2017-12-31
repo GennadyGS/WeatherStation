@@ -18,6 +18,6 @@ let runSequentially list = async {
 let combineWithAndInore continuation prevResult = 
     async {
         let! result = prevResult
-        continuation
+        continuation result
         return result
     }
