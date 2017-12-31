@@ -4,6 +4,7 @@ open FSharp.Data
 open MeasureUtils
 open System
 open System.Data.SqlClient
+open Serilog.Core
 
 [<Literal>]
 let devConnectionString =
@@ -11,7 +12,11 @@ let devConnectionString =
 
 type WeatherStation = SqlProgrammabilityProvider<devConnectionString>
 
-let insertMeasurementAsync (connectionString: string) (StationId stationId, measurement: Measurement) : Async<unit> =
+let insertMeasurementAsync 
+        (logger: Logger) 
+        (connectionString: string) 
+        (StationId stationId, measurement: Measurement) 
+        : Async<unit> =
     async { 
         use connection = new SqlConnection(connectionString)
         let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
@@ -26,7 +31,11 @@ let insertMeasurementAsync (connectionString: string) (StationId stationId, meas
     }
     |> AsyncUtils.map ignore
 
-let insertMeasurementsAsync (connectionString: string) (measurements: list<StationId * Measurement>) : Async<unit> =
+let insertMeasurementsAsync 
+        (logger: Logger) 
+        (connectionString: string) 
+        (measurements: list<StationId * Measurement>) 
+        : Async<unit> =
     async { 
         use connection = new SqlConnection(connectionString)
         let measurementsTable = new WeatherStation.dbo.Tables.Measurements()
@@ -45,7 +54,10 @@ let insertMeasurementsAsync (connectionString: string) (measurements: list<Stati
     }
     |> AsyncUtils.map ignore
 
-let getMeasurementsAsync (connectionString: string) : Async<list<StationId * Measurement>> = 
+let getMeasurementsAsync 
+        (logger: Logger) 
+        (connectionString: string) 
+        : Async<list<StationId * Measurement>> = 
     use cmd = new SqlCommandProvider<"
         SELECT * FROM dbo.Measurements ORDER BY StationId", devConnectionString>(connectionString);
 
@@ -61,7 +73,10 @@ let getMeasurementsAsync (connectionString: string) : Async<list<StationId * Mea
                   HumidityOutside = record.HumidityOutside |> Option.map valueToPercent }))
     |> AsyncUtils.map Seq.toList
 
-let getStationsLastMeasurementsAsync (connectionString: string): Async<list<StationId * DeviceInfo * DateTime option>> =
+let getStationsLastMeasurementsAsync 
+        (logger: Logger)
+        (connectionString: string)
+        : Async<list<StationId * DeviceInfo * DateTime option>> =
     use cmd = new SqlCommandProvider<"
             SELECT s.Id stationId, s.DeviceId, s.VendorId, MAX(m.Timestamp) Timestamp FROM dbo.Stations s
             LEFT OUTER JOIN dbo.Measurements m ON s.Id = m.StationId

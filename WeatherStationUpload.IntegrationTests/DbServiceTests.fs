@@ -30,49 +30,49 @@ type DbServiceTests() =
     let sortMeasurements (measurements : Measurement list) : Measurement list = 
         measurements |> List.sortBy (fun measurement -> measurement.Timestamp)
     
-    let saveMeasurement measurement =
+    member private this.saveMeasurement measurement =
         (testStationId, measurement)
-        |> DbService.insertMeasurementAsync testConnectionString 
+        |> DbService.insertMeasurementAsync this.Logger testConnectionString 
         |> Async.RunSynchronously
 
-    let saveMeasurements measurements =
+    member private this.saveMeasurements measurements =
         measurements
         |> List.map (fun measurement -> (testStationId, measurement))
-        |> DbService.insertMeasurementsAsync testConnectionString 
+        |> DbService.insertMeasurementsAsync this.Logger testConnectionString 
         |> Async.RunSynchronously
     
-    let testSaveMeasurements measurements = 
-        saveMeasurements measurements
+    member private this.testSaveMeasurements measurements = 
+        this.saveMeasurements measurements
         
         let result = 
-            DbService.getMeasurementsAsync testConnectionString
+            DbService.getMeasurementsAsync this.Logger testConnectionString
             |> Async.RunSynchronously
             |> List.map snd
         
         result |> should equal (measurements |> sortMeasurements)
 
     [<Fact>]
-    let ``SaveMeasurements should save empty list of observation correctly``() = 
-        testSaveMeasurements []
+    member this.``SaveMeasurements should save empty list of observation correctly``() = 
+        this.testSaveMeasurements []
 
     [<Fact>]
-    let ``SaveMeasurements should save measurements correctly``() = 
-        testSaveMeasurements (getSampleMeasurements())
+    member this.``SaveMeasurements should save measurements correctly``() = 
+        this.testSaveMeasurements (getSampleMeasurements())
 
     [<Fact>]
-    let ``getStationsLastMeasurements returns one record with empty time for empty database``() = 
+    member this. ``getStationsLastMeasurements returns one record with empty time for empty database``() = 
         let results = 
-            DbService.getStationsLastMeasurementsAsync testConnectionString
+            DbService.getStationsLastMeasurementsAsync this.Logger testConnectionString
             |> Async.RunSynchronously
         
         results = [testStationId, getTestDeviceInfo(), None] |> should be True
 
     [<Fact>]
-    let ``getStationsLastMeasurements returns correct last measurement time``() = 
-        saveMeasurements (getSampleMeasurements())
+    member this.``getStationsLastMeasurements returns correct last measurement time``() = 
+        this.saveMeasurements (getSampleMeasurements())
         
         let results = 
-            DbService.getStationsLastMeasurementsAsync testConnectionString
+            DbService.getStationsLastMeasurementsAsync this.Logger testConnectionString
             |> Async.RunSynchronously
         
         let maxSampleMeasurementTime = 
