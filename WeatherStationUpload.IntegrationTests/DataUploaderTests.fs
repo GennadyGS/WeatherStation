@@ -11,8 +11,6 @@ open FsUnit.Xunit
 type DataUploaderTests() = 
     inherit DbTests()
 
-    let dbInsertOptions: TimeSpan option * int option = None, None
-
     [<Fact>]
     member this.``UploadData should upload data correctly for the last days`` () = 
         let timeInterval = 
@@ -23,7 +21,7 @@ type DataUploaderTests() =
             do! DataUploader.uploadDataAsync
                     this.Logger
                     Settings.ConnectionStrings.WeatherStation 
-                    dbInsertOptions
+                    DbInsertOptions.Default
                     timeInterval
                     (getTestDeviceInfo())
                     (getTestStationId())

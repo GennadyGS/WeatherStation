@@ -35,7 +35,7 @@ let insertMeasurementAsync
 let insertMeasurementsAsync 
         (logger: Logger) 
         (connectionString: string) 
-        (timeout: TimeSpan option, batchSize: int option)
+        (options: DbInsertOptions)
         (measurements: list<StationId * Measurement>)
         : Async<unit> =
     async { 
@@ -53,7 +53,7 @@ let insertMeasurementsAsync
                         HumidityInside = (measurement.HumidityInside |> Option.map percentToValue),
                         HumidityOutside = (measurement.HumidityOutside |> Option.map percentToValue)))
             |> ignore
-        return measurementsTable.BulkCopy(connection, ?timeout = timeout, ?batchSize = batchSize)
+        return measurementsTable.BulkCopy(connection, ?timeout = options.Timeout, ?batchSize = options.BatchSize)
     }
     |> AsyncUtils.map ignore
 
