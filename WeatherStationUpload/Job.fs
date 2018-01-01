@@ -21,14 +21,17 @@ let executeAsync
                       To = intervalEndTime }
                     deviceInfo
                     stationId
-            with
-            | _ as e -> 
-                logger.Error(e, "Error uploading data for device {device}", deviceInfo.DeviceId)
+            with 
+            | _ as e -> logger.Error(e, "Error uploading data for device {device}", deviceInfo.DeviceId)
         }
 
-    logger.Information("Start job; intervalEndTime: {intervalEndTime}; maxTimeInterval: {maxTimeInterval}", intervalEndTime, maxTimeInterval)
-    DbService.getStationsLastMeasurementsAsync logger connectionString
-    |> AsyncUtils.bind(
-        List.map uploadDataForDeviceAsync
-        >> AsyncUtils.runSequentially)
-    |> AsyncUtils.combineWithAndInore (fun _ -> logger.Information("Job complete"))
+    async {
+        logger.Information("Start job; intervalEndTime: {intervalEndTime}; maxTimeInterval: {maxTimeInterval}", intervalEndTime, maxTimeInterval)
+        try 
+            let! lastMeasurements = DbService.getStationsLastMeasurementsAsync logger connectionString
+            for (stationId, deviceInfo, lastMeasurementTime) in lastMeasurements do
+                do! uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime)
+            logger.Information("Job complete")
+        with 
+        | _ as e -> logger.Error(e, "Error running job")
+    }
