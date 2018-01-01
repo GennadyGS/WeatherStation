@@ -15,6 +15,7 @@ let main argv =
         Job.executeAsync 
             logger 
             Settings.ConnectionStrings.WeatherStation
+            (Some Settings.DbInsertTimeout, Some Settings.DbInsertBatchSize)
             DateTime.Now
             (TimeSpan.FromDays(Settings.MaxTimeIntervalDays |> float))
         |> Async.RunSynchronously

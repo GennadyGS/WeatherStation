@@ -5,6 +5,7 @@ open MeasureUtils
 open System
 open System.Data.SqlClient
 open Serilog.Core
+open FSharp.Data
 
 [<Literal>]
 let devConnectionString =
@@ -34,7 +35,8 @@ let insertMeasurementAsync
 let insertMeasurementsAsync 
         (logger: Logger) 
         (connectionString: string) 
-        (measurements: list<StationId * Measurement>) 
+        (timeout: TimeSpan option, batchSize: int option)
+        (measurements: list<StationId * Measurement>)
         : Async<unit> =
     async { 
         logger.Information("Inserting {measurementCount} measurements in database", measurements.Length)
@@ -51,7 +53,7 @@ let insertMeasurementsAsync
                         HumidityInside = (measurement.HumidityInside |> Option.map percentToValue),
                         HumidityOutside = (measurement.HumidityOutside |> Option.map percentToValue)))
             |> ignore
-        return measurementsTable.BulkCopy(connection)
+        return measurementsTable.BulkCopy(connection, ?timeout = timeout, ?batchSize = batchSize)
     }
     |> AsyncUtils.map ignore
 
