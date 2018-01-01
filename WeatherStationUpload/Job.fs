@@ -6,7 +6,7 @@ open Serilog.Core
 let executeAsync 
         (logger: Logger)
         (connectionString: string) 
-        (insertTimeout: TimeSpan option, insertBatchSize: int option)
+        (dbInsertOptions: DbInsertOptions)
         (intervalEndTime: DateTime)
         (maxTimeInterval: TimeSpan): Async<unit> = 
     let uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime) = 
@@ -18,7 +18,7 @@ let executeAsync
                 return! DataUploader.uploadDataAsync
                     logger
                     connectionString
-                    (insertTimeout, insertBatchSize)
+                    dbInsertOptions
                     { From = (getIntervalStartTime lastMeasurementTime)
                       To = intervalEndTime }
                     deviceInfo

@@ -25,3 +25,9 @@ type Measurement =
 type DeviceInfo = 
     { VendorId: Guid
       DeviceId: string }
+
+type DbInsertOptions = 
+    { Timeout: TimeSpan option
+      BatchSize: int option } with 
+    static member Default =
+        { Timeout = None; BatchSize = None }

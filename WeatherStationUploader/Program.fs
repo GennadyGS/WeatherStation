@@ -12,10 +12,14 @@ let main argv =
             .WriteTo.Console()
             .CreateLogger();
     try
+        let dbInsertOptions = 
+            { Timeout = Some Settings.DbInsertTimeout
+              BatchSize = Some Settings.DbInsertBatchSize }
+
         Job.executeAsync 
             logger 
             Settings.ConnectionStrings.WeatherStation
-            (Some Settings.DbInsertTimeout, Some Settings.DbInsertBatchSize)
+            dbInsertOptions
             DateTime.Now
             (TimeSpan.FromDays(Settings.MaxTimeIntervalDays |> float))
         |> Async.RunSynchronously
