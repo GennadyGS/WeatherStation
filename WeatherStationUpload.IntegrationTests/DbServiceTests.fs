@@ -12,6 +12,7 @@ type DbServiceTests() =
     
     let testConnectionString = Settings.ConnectionStrings.WeatherStation
     let testStationId = getTestStationId()
+    let dbInsertOptions: TimeSpan option * int option = None, None
 
     let getSampleMeasurements () : Measurement list = 
         [ 
@@ -38,7 +39,7 @@ type DbServiceTests() =
     member private this.saveMeasurements measurements =
         measurements
         |> List.map (fun measurement -> (testStationId, measurement))
-        |> DbService.insertMeasurementsAsync this.Logger testConnectionString 
+        |> DbService.insertMeasurementsAsync this.Logger testConnectionString dbInsertOptions
         |> Async.RunSynchronously
     
     member private this.testSaveMeasurements measurements = 
