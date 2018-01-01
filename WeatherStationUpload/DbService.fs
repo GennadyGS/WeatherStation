@@ -84,11 +84,13 @@ let getStationsLastMeasurementsAsync
             GROUP BY s.Id, s.DeviceId, s.VendorId
             ", devConnectionString>(connectionString)
     cmd.AsyncExecute()
-    |> AsyncUtils.map (Seq.map(fun record ->
-            StationId record.stationId,
-            {
-                DeviceId = record.DeviceId
-                VendorId = record.VendorId
-            },
-            record.Timestamp))
+    |> AsyncUtils.map 
+        (Seq.map 
+            (fun record ->
+                StationId record.stationId,
+                {
+                    DeviceId = record.DeviceId
+                    VendorId = record.VendorId
+                },
+                record.Timestamp))
     |> AsyncUtils.map Seq.toList
