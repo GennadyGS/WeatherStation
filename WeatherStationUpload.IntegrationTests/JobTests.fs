@@ -16,14 +16,16 @@ type JobTests() =
         async {
             let maxTimeInterval = TimeSpan.FromDays(3.0)
     
-            do! Job.executeAsync this.Logger testConnectionString DbInsertOptions.Default (testTime.AddDays(-1.0)) maxTimeInterval
+            let! result1 = Job.executeAsync this.Logger testConnectionString DbInsertOptions.Default (testTime.AddDays(-1.0)) maxTimeInterval
+            result1 |> should equal true
 
-            let! result1 = DbService.getMeasurementsAsync this.Logger testConnectionString
-            Assert.True (result1.Length > 250)
+            let! measurements1 = DbService.getMeasurementsAsync this.Logger testConnectionString
+            Assert.True (measurements1.Length > 250)
 
-            do! Job.executeAsync this.Logger testConnectionString DbInsertOptions.Default testTime maxTimeInterval
+            let! result2 = Job.executeAsync this.Logger testConnectionString DbInsertOptions.Default testTime maxTimeInterval
+            result2 |> should equal true
 
-            let! result2 = DbService.getMeasurementsAsync this.Logger testConnectionString
-            result2.Length |> should be (greaterThan result1.Length)
+            let! measurements2 = DbService.getMeasurementsAsync this.Logger testConnectionString
+            measurements2.Length |> should be (greaterThan measurements1.Length)
         }
         |> Async.RunSynchronously
