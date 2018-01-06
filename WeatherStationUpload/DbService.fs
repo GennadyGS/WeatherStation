@@ -4,7 +4,7 @@ open FSharp.Data
 open MeasureUtils
 open System
 open System.Data.SqlClient
-open Serilog.Core
+open Serilog
 open FSharp.Data
 
 [<Literal>]
@@ -14,7 +14,7 @@ let devConnectionString =
 type WeatherStation = SqlProgrammabilityProvider<devConnectionString>
 
 let insertMeasurementAsync 
-        (logger: Logger) 
+        (logger: ILogger) 
         (connectionString: string) 
         (StationId stationId, measurement: Measurement) 
         : Async<unit> =
@@ -33,7 +33,7 @@ let insertMeasurementAsync
     |> AsyncUtils.map ignore
 
 let insertMeasurementsAsync 
-        (logger: Logger) 
+        (logger: ILogger) 
         (connectionString: string) 
         (options: DbInsertOptions)
         (measurements: list<StationId * Measurement>)
@@ -58,7 +58,7 @@ let insertMeasurementsAsync
     |> AsyncUtils.map ignore
 
 let getMeasurementsAsync 
-        (logger: Logger) 
+        (logger: ILogger) 
         (connectionString: string) 
         : Async<list<StationId * Measurement>> = 
     use cmd = new SqlCommandProvider<"
@@ -77,7 +77,7 @@ let getMeasurementsAsync
     |> AsyncUtils.map Seq.toList
 
 let getStationsLastMeasurementsAsync 
-        (logger: Logger)
+        (logger: ILogger)
         (connectionString: string)
         : Async<list<StationId * DeviceInfo * DateTime option>> =
     use cmd = new SqlCommandProvider<"

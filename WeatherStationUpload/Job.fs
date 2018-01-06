@@ -1,11 +1,10 @@
 ﻿module WeatherStationUpload.Job
 
 open System
-open Serilog.Core
-open System.Threading.Tasks
+open Serilog
 
 let executeAsync 
-        (logger: Logger)
+        (logger: ILogger)
         (connectionString: string) 
         (dbInsertOptions: DbInsertOptions)
         (intervalEndTime: DateTime)
@@ -41,12 +40,3 @@ let executeAsync
             logger.Error(e, "Error running job")
             return false
     }
-
-let executeAsTaskAsync
-        (logger: Logger)
-        (connectionString: string) 
-        (dbInsertOptions: DbInsertOptions)
-        (intervalEndTime: DateTime)
-        (maxTimeInterval: TimeSpan): Task<bool> = 
-    executeAsync logger connectionString dbInsertOptions intervalEndTime maxTimeInterval
-    |> Async.StartAsTask
