@@ -4,7 +4,7 @@ open HtmlLoader
 open HtmlParser
 open System
 open FSharp.Control
-open Serilog.Core
+open Serilog
 
 [<Literal>]
 let private maxPageSize = 250;
@@ -17,7 +17,7 @@ let private timeInsideInterval interval time =
     time >= interval.From && time <= interval.To
 
 let collectDataAsync 
-        (logger: Logger)
+        (logger: ILogger)
         (timeInterval : TimeInterval) 
         (deviceInfo: DeviceInfo): Async<Measurement list> =
     logger.Information("Collecting data for device {deviceId}", deviceInfo.DeviceId)

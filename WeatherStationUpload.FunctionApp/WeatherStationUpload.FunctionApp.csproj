@@ -7,6 +7,9 @@
     <PackageReference Include="Serilog.Sinks.AzureWebJobsTraceWriter" Version="1.0.22" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WeatherStationUpload\WeatherStationUpload.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>

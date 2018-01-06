@@ -64,6 +64,7 @@
     <Compile Include="DataCollector.fs" />
     <Compile Include="DataUploader.fs" />
     <Compile Include="Job.fs" />
+    <Compile Include="JobAdapter.fs" />
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>

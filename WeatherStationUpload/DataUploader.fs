@@ -1,11 +1,10 @@
 ﻿module WeatherStationUpload.DataUploader
 
 open DataCollector
-open Serilog.Core
-open System
+open Serilog
 
 let uploadDataAsync
-        (logger: Logger)
+        (logger: ILogger)
         (connectionString : string)
         (dbInsertOptions: DbInsertOptions)
         (timeInterval : TimeInterval)
