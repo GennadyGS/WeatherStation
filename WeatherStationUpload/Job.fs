@@ -2,13 +2,14 @@
 
 open System
 open Serilog.Core
+open System.Threading.Tasks
 
 let executeAsync 
         (logger: Logger)
         (connectionString: string) 
         (dbInsertOptions: DbInsertOptions)
         (intervalEndTime: DateTime)
-        (maxTimeInterval: TimeSpan): Async<unit> = 
+        (maxTimeInterval: TimeSpan): Async<bool> = 
     let uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime) = 
         let getIntervalStartTime = function
             | Some (time: DateTime) -> time + TimeSpan.FromSeconds(1.0)
@@ -34,6 +35,18 @@ let executeAsync
             for (stationId, deviceInfo, lastMeasurementTime) in lastMeasurements do
                 do! uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime)
             logger.Information("Job complete")
+            return true
         with 
-        | _ as e -> logger.Error(e, "Error running job")
+        | _ as e -> 
+            logger.Error(e, "Error running job")
+            return false
     }
+
+let executeAsTaskAsync
+        (logger: Logger)
+        (connectionString: string) 
+        (dbInsertOptions: DbInsertOptions)
+        (intervalEndTime: DateTime)
+        (maxTimeInterval: TimeSpan): Task<bool> = 
+    executeAsync logger connectionString dbInsertOptions intervalEndTime maxTimeInterval
+    |> Async.StartAsTask
