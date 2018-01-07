@@ -80,19 +80,22 @@ let getStationsLastMeasurementsAsync
         (logger: ILogger)
         (connectionString: string)
         : Async<list<StationId * DeviceInfo * DateTime option>> =
-    use cmd = new SqlCommandProvider<"
-            SELECT s.Id stationId, s.DeviceId, s.VendorId, MAX(m.Timestamp) Timestamp FROM dbo.Stations s
-            LEFT OUTER JOIN dbo.Measurements m ON s.Id = m.StationId
-            GROUP BY s.Id, s.DeviceId, s.VendorId
-            ", devConnectionString>(connectionString)
-    cmd.AsyncExecute()
-    |> AsyncUtils.map 
-        (Seq.map 
-            (fun record ->
-                StationId record.stationId,
-                {
-                    DeviceId = record.DeviceId
-                    VendorId = record.VendorId
-                },
-                record.Timestamp))
-    |> AsyncUtils.map Seq.toList
+    async {
+        use cmd = new SqlCommandProvider<"
+                SELECT s.Id stationId, s.DeviceId, s.VendorId, MAX(m.Timestamp) Timestamp FROM dbo.Stations s
+                LEFT OUTER JOIN dbo.Measurements m ON s.Id = m.StationId
+                GROUP BY s.Id, s.DeviceId, s.VendorId
+                ", devConnectionString>(connectionString)
+        let! records = cmd.AsyncExecute()
+        return
+            records
+            |> Seq.toList
+            |> List.map
+                (fun record ->
+                    StationId record.stationId,
+                    {
+                        DeviceId = record.DeviceId
+                        VendorId = record.VendorId
+                    },
+                    record.Timestamp)
+    }
