@@ -29,14 +29,9 @@ let executeAsync
 
     async {
         logger.Information("Start job; intervalEndTime: {intervalEndTime}; maxTimeInterval: {maxTimeInterval}", intervalEndTime, maxTimeInterval)
-        try 
-            let! lastMeasurements = DbService.getStationsLastMeasurementsAsync logger connectionString
-            for (stationId, deviceInfo, lastMeasurementTime) in lastMeasurements do
-                do! uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime)
-            logger.Information("Job complete")
-            return true
-        with 
-        | _ as e -> 
-            logger.Error(e, "Error running job")
-            return false
+        let! lastMeasurements = DbService.getStationsLastMeasurementsAsync logger connectionString
+        for (stationId, deviceInfo, lastMeasurementTime) in lastMeasurements do
+            do! uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime)
+        logger.Information("Job complete")
+        return true
     }
