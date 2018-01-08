@@ -23,7 +23,9 @@ let main argv =
             DateTime.Now
             (TimeSpan.FromDays(Settings.MaxTimeIntervalDays |> float))
         |> Async.RunSynchronously
-        0
+        |> function
+           | true -> 0
+           | false -> 1
     with
     | _ as e -> 
         logger.Error(e, "Unhanded exception")
