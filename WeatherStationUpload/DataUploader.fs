@@ -17,7 +17,7 @@ let uploadDataAsync
     |> AsyncUtils.bind 
         (function 
         | [] -> logger.Information("No new data to insert for device {device}", deviceInfo.DeviceId) |> async.Return
-        | measurements -> DbService.insertMeasurementsAsync logger connectionString dbInsertOptions measurements)
+        | measurements -> DbServiceDapper.insertMeasurementsAsync logger connectionString dbInsertOptions measurements)
     |> AsyncUtils.combineWithAndInore (fun _ -> logger.Information("Upload data for device {device} complete", deviceInfo.DeviceId))
 
     
