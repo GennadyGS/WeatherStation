@@ -60,7 +60,7 @@
     <Compile Include="TryParser.fs" />
     <Compile Include="HtmlLoader.fs" />
     <Compile Include="HtmlParser.fs" />
-    <Compile Include="DbServiceDapper.fs" />
+    <Compile Include="DbService.fs" />
     <Compile Include="DataCollector.fs" />
     <Compile Include="DataUploader.fs" />
     <Compile Include="Job.fs" />

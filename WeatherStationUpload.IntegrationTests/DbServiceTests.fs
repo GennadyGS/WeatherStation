@@ -32,20 +32,20 @@ type DbServiceTests() =
     
     member private this.saveMeasurement measurement =
         (testStationId, measurement)
-        |> DbServiceDapper.insertMeasurementAsync this.Logger testConnectionString 
+        |> DbService.insertMeasurementAsync this.Logger testConnectionString 
         |> Async.RunSynchronously
 
     member private this.saveMeasurements measurements =
         measurements
         |> List.map (fun measurement -> (testStationId, measurement))
-        |> DbServiceDapper.insertMeasurementsAsync this.Logger testConnectionString DbInsertOptions.Default
+        |> DbService.insertMeasurementsAsync this.Logger testConnectionString DbInsertOptions.Default
         |> Async.RunSynchronously
     
     member private this.testSaveMeasurements measurements = 
         this.saveMeasurements measurements
         
         let result = 
-            DbServiceDapper.getMeasurementsAsync this.Logger testConnectionString
+            DbService.getMeasurementsAsync this.Logger testConnectionString
             |> Async.RunSynchronously
             |> List.map snd
         
@@ -62,7 +62,7 @@ type DbServiceTests() =
     [<Fact>]
     member this. ``getStationsLastMeasurements returns one record with empty time for empty database``() = 
         let results = 
-            DbServiceDapper.getStationsLastMeasurementsAsync this.Logger testConnectionString
+            DbService.getStationsLastMeasurementsAsync this.Logger testConnectionString
             |> Async.RunSynchronously
         
         results = [testStationId, getTestDeviceInfo(), None] |> should be True
@@ -72,7 +72,7 @@ type DbServiceTests() =
         this.saveMeasurements (getSampleMeasurements())
         
         let results = 
-            DbServiceDapper.getStationsLastMeasurementsAsync this.Logger testConnectionString
+            DbService.getStationsLastMeasurementsAsync this.Logger testConnectionString
             |> Async.RunSynchronously
         
         let maxSampleMeasurementTime = 

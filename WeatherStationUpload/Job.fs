@@ -29,7 +29,7 @@ let executeAsync
 
     async {
         logger.Information("Start job; intervalEndTime: {intervalEndTime}; maxTimeInterval: {maxTimeInterval}", intervalEndTime, maxTimeInterval)
-        let! lastMeasurements = DbServiceDapper.getStationsLastMeasurementsAsync logger connectionString
+        let! lastMeasurements = DbService.getStationsLastMeasurementsAsync logger connectionString
         for (stationId, deviceInfo, lastMeasurementTime) in lastMeasurements do
             do! uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime)
         logger.Information("Job complete")

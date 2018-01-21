@@ -26,7 +26,7 @@ type DataUploaderTests() =
                     (getTestDeviceInfo())
                     (getTestStationId())
 
-            let! measurements = DbServiceDapper.getMeasurementsAsync this.Logger Settings.ConnectionStrings.WeatherStation
+            let! measurements = DbService.getMeasurementsAsync this.Logger Settings.ConnectionStrings.WeatherStation
 
             measurements.Length |> should be (greaterThan 250)
         }
