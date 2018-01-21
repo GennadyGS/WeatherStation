@@ -17,7 +17,7 @@ namespace WeatherStationUpload.FunctionApp
                 .CreateLogger();
             logger.Information($"WeatherStationUpload function started at: {DateTime.Now}");
 
-            const string connectionString = "Data Source=gennadygs.database.windows.net;Initial Catalog=WeatherStation;Integrated Security=False;User ID=gennadygs;Password=*******};Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            const string connectionString = "Data Source=gennadygs.database.windows.net;Initial Catalog=WeatherStation;Integrated Security=False;User ID=gennadygs;Password=zl0zYH`};Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             var maxTimeInterval = TimeSpan.FromDays(100);
 
             var result = await JobAdapter.executeAsync(logger, connectionString, null, null, DateTime.Now, maxTimeInterval);
