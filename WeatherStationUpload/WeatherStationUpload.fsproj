@@ -60,7 +60,6 @@
     <Compile Include="TryParser.fs" />
     <Compile Include="HtmlLoader.fs" />
     <Compile Include="HtmlParser.fs" />
-    <Compile Include="DbService.fs" />
     <Compile Include="DbServiceDapper.fs" />
     <Compile Include="DataCollector.fs" />
     <Compile Include="DataUploader.fs" />
@@ -197,26 +196,6 @@
       <ItemGroup>
         <Reference Include="FSharp.Data">
           <HintPath>..\packages\FSharp.Data\lib\portable-net45+netcore45+wpa81+wp8\FSharp.Data.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.0.3' Or $(TargetFrameworkVersion) == 'v4.5')">
-      <ItemGroup>
-        <Reference Include="System.Xml">
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.0.3' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3' Or $(TargetFrameworkVersion) == 'v4.7' Or $(TargetFrameworkVersion) == 'v4.7.1')">
-      <ItemGroup>
-        <Reference Include="FSharp.Data.SqlClient">
-          <HintPath>..\packages\FSharp.Data.SqlClient\lib\net40\FSharp.Data.SqlClient.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

@@ -4,7 +4,6 @@ nuget FSharp.Configuration
 nuget FSharp.Core
 nuget FSharp.Data       
 nuget FSharp.Text.RegexProvider
-nuget FSharp.Data.SqlClient
 nuget FSharp.Control.AsyncSeq
 nuget FsUnit.xUnit
 nuget FSharp.Interop.Dynamic
