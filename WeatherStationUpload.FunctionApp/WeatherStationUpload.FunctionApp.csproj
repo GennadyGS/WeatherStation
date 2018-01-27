@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FSharp.Control.AsyncSeq" Version="2.0.20" />
-    <PackageReference Include="FSharp.Core" Version="4.2.3" />
+    <PackageReference Include="FSharp.Core" Version="4.0.0.1" />
     <PackageReference Include="FSharp.Data" Version="2.4.3" />
     <PackageReference Include="FSharp.Text.RegexProvider" Version="1.0.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.6" />
