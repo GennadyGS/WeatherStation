@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -17,7 +18,7 @@ namespace WeatherStationUpload.FunctionApp
                 .CreateLogger();
             logger.Information($"WeatherStationUpload function started at: {DateTime.Now}");
 
-            const string connectionString = "Data Source=gennadygs.database.windows.net;Initial Catalog=WeatherStation;Integrated Security=False;User ID=gennadygs;Password=zl0zYH`};Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            string connectionString = ConfigurationManager.AppSettings["DbConnectionString"];
             var maxTimeInterval = TimeSpan.FromDays(100);
 
             var result = await JobAdapter.executeAsync(logger, connectionString, null, null, DateTime.Now, maxTimeInterval);
