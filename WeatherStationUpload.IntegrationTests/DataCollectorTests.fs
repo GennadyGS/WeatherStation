@@ -2,14 +2,11 @@
 
 open Xunit
 open WeatherStationUpload
-open System
 open Utils
 open FsUnit.Xunit
 
 type DataCollectorTests() = 
     inherit BaseTests()
-
-    let testTimeZone = WeatherStationUpload.TimeZone "FLE Standard Time"
 
     [<Fact>]
     member this.``CollectData should return result with appropriate size for the last days`` () = 
@@ -18,7 +15,7 @@ type DataCollectorTests() =
               To = System.DateTime.UtcNow }
         
         let result = 
-            DataCollector.collectDataAsync this.Logger testTimeZone timeInterval (getTestDeviceInfo())
+            DataCollector.collectDataAsync this.Logger timeInterval (getTestStationInfo())
             |> Async.RunSynchronously
         
         result.Length |> should be (greaterThan 0)

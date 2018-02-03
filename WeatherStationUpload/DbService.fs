@@ -83,7 +83,7 @@ let getMeasurementsAsync
 let getStationsLastMeasurementsAsync 
         (logger: ILogger)
         (connectionString: string)
-        : Async<list<StationId * DeviceInfo * DateTime option * TimeZone>> =
+        : Async<(StationInfo * DateTime option) list> =
     async {
         use connection = new SqlConnection(connectionString)
         let! records = connection.QueryAsync("
@@ -96,11 +96,10 @@ let getStationsLastMeasurementsAsync
             |> Seq.toList
             |> List.map
                 (fun record ->
-                    StationId record ? stationId,
-                    {
-                        DeviceId = record ? DeviceId
-                        VendorId = record ? VendorId
-                    },
-                    record ? Timestamp |> toOption,
-                    TimeZone record ? TimeZoneName)
+                    { StationId = StationId record ? stationId
+                      DeviceInfo =
+                        { DeviceId = record ? DeviceId
+                          VendorId = record ? VendorId }
+                      TimeZone = TimeZone record ? TimeZoneName },
+                      record ? Timestamp |> toOption)
     }

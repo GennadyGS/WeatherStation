@@ -11,9 +11,6 @@ type DbServiceTests() =
     inherit DbTests()
     
     let testConnectionString = Settings.ConnectionStrings.WeatherStation
-    let testStationId = getTestStationId()
-
-    let testTimeZone = TimeZone "FLE Standard Time"
 
     let getSampleMeasurements () : Measurement list = 
         [ 
@@ -33,13 +30,13 @@ type DbServiceTests() =
         measurements |> List.sortBy (fun measurement -> measurement.Timestamp)
     
     member private this.saveMeasurement measurement =
-        (testStationId, measurement)
+        (getTestStationId(), measurement)
         |> DbService.insertMeasurementAsync this.Logger testConnectionString 
         |> Async.RunSynchronously
 
     member private this.saveMeasurements measurements =
         measurements
-        |> List.map (fun measurement -> (testStationId, measurement))
+        |> List.map (fun measurement -> (getTestStationId(), measurement))
         |> DbService.insertMeasurementsAsync this.Logger testConnectionString DbInsertOptions.Default
         |> Async.RunSynchronously
     
@@ -67,7 +64,7 @@ type DbServiceTests() =
             DbService.getStationsLastMeasurementsAsync this.Logger testConnectionString
             |> Async.RunSynchronously
         
-        results = [testStationId, getTestDeviceInfo(), None, testTimeZone] |> should be True
+        results = [getTestStationInfo(), None] |> should be True
 
     [<Fact>]
     member this.``getStationsLastMeasurements returns correct last measurement time``() = 
@@ -82,4 +79,4 @@ type DbServiceTests() =
             |> List.map (fun item -> item.Timestamp)
             |> List.max
 
-        results |> should equal [testStationId, getTestDeviceInfo(), Some maxSampleMeasurementTime, testTimeZone]
+        results |> should equal [getTestStationInfo(), Some maxSampleMeasurementTime]

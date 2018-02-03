@@ -10,8 +10,6 @@ open FsUnit.Xunit
 type DataUploaderTests() = 
     inherit DbTests()
 
-    let testTimeZone = TimeZone "FLE Standard Time"
-
     [<Fact>]
     member this.``UploadData should upload data correctly for the last days`` () = 
         let timeInterval = 
@@ -23,10 +21,8 @@ type DataUploaderTests() =
                     this.Logger
                     Settings.ConnectionStrings.WeatherStation 
                     DbInsertOptions.Default
-                    testTimeZone
                     timeInterval
-                    (getTestDeviceInfo())
-                    (getTestStationId())
+                    (getTestStationInfo())
 
             let! measurements = DbService.getMeasurementsAsync this.Logger Settings.ConnectionStrings.WeatherStation
 

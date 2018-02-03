@@ -9,10 +9,10 @@ let executeAsync
         (dbInsertOptions: DbInsertOptions)
         (intervalEndTimeUtc: DateTime)
         (maxTimeInterval: TimeSpan): Async<bool> = 
-    let uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime, timeZone) = 
+    let uploadDataForDeviceAsync (stationInfo, lastMeasurementTime) = 
         let getIntervalStartTime = function
             | Some (time: DateTime) -> 
-                let timeUtc = TimeUtils.timeToUtc timeZone time
+                let timeUtc = TimeUtils.timeToUtc stationInfo.TimeZone time
                 timeUtc + TimeSpan.FromSeconds(1.0)
             | None -> intervalEndTimeUtc.Add(-maxTimeInterval)
         async {
@@ -21,13 +21,11 @@ let executeAsync
                     logger
                     connectionString
                     dbInsertOptions
-                    timeZone
                     { From = (getIntervalStartTime lastMeasurementTime)
                       To = intervalEndTimeUtc }
-                    deviceInfo
-                    stationId
+                    stationInfo
             with 
-            | _ as e -> logger.Error(e, "Error uploading data for device {device}", deviceInfo.DeviceId)
+            | _ as e -> logger.Error(e, "Error uploading data for device {device}", stationInfo.DeviceInfo.DeviceId)
         }
 
     async {

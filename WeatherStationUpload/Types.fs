@@ -15,9 +15,6 @@ type TimeInterval =
     { From: DateTime
       To: DateTime }
 
-type StationId = 
-    | StationId of int
-
 type Measurement = 
     { Timestamp: DateTime
       TemperatureInside: decimal<C> option
@@ -25,9 +22,17 @@ type Measurement =
       TemperatureOutside: decimal<C> option
       HumidityOutside: decimal<``%``> option }
 
+type StationId = 
+    | StationId of int
+
 type DeviceInfo = 
     { VendorId: Guid
       DeviceId: string }
+
+type StationInfo = 
+    { StationId: StationId
+      DeviceInfo: DeviceInfo
+      TimeZone: TimeZone }
 
 type DbInsertOptions = 
     { Timeout: TimeSpan option
