@@ -16,13 +16,13 @@ namespace WeatherStationUpload.FunctionApp
             ILogger logger = new LoggerConfiguration()
                 .WriteTo.TraceWriter(traceWriter)
                 .CreateLogger();
-            logger.Information($"WeatherStationUpload function started at: {DateTime.Now}");
+            logger.Information($"WeatherStationUpload function started at UTC time: {DateTime.UtcNow}");
 
             string connectionString = ConfigurationManager.AppSettings["DbConnectionString"];
             var maxTimeInterval = TimeSpan.FromDays(100);
 
-            var result = await JobAdapter.executeAsync(logger, connectionString, null, null, DateTime.Now, maxTimeInterval);
-            logger.Information($"WeatherStationUpload function finished with result {result} at: {DateTime.Now}");
+            var result = await JobAdapter.executeAsync(logger, connectionString, null, null, DateTime.UtcNow, maxTimeInterval);
+            logger.Information($"WeatherStationUpload function finished with result {result} at UTC time: {DateTime.UtcNow}");
         }
     }
 }

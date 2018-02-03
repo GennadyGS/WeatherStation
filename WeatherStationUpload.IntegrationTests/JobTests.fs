@@ -9,7 +9,7 @@ type JobTests() =
     inherit DbTests()
 
     let testConnectionString = Settings.ConnectionStrings.WeatherStation
-    let testTime = DateTime.Now
+    let testTime = DateTime.UtcNow
     
     [<Fact>]
     member this.``Execute should load data incrementally`` () =
