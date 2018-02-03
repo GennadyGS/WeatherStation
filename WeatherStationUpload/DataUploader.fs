@@ -7,12 +7,13 @@ let uploadDataAsync
         (logger: ILogger)
         (connectionString : string)
         (dbInsertOptions: DbInsertOptions)
+        (timeZone: TimeZone)
         (timeIntervalUtc : TimeInterval)
         (deviceInfo: DeviceInfo)
         (stationId: StationId)
         : Async<unit> =
     logger.Information("Upload data for device {device} from UTC time {from} to {to}", deviceInfo.DeviceId, timeIntervalUtc.From, timeIntervalUtc.To)
-    collectDataAsync logger timeIntervalUtc deviceInfo
+    collectDataAsync logger timeZone timeIntervalUtc deviceInfo
     |> AsyncUtils.map (List.map (fun measurement -> stationId, measurement))
     |> AsyncUtils.bind 
         (function 

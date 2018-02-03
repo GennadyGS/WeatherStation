@@ -1,6 +1,5 @@
 ﻿namespace WeatherStationUpload.IntegrationTests
 
-open System
 open Utils
 open Xunit
 
@@ -11,17 +10,20 @@ open FsUnit.Xunit
 type DataUploaderTests() = 
     inherit DbTests()
 
+    let testTimeZone = TimeZone "FLE Standard Time"
+
     [<Fact>]
     member this.``UploadData should upload data correctly for the last days`` () = 
         let timeInterval = 
-            { From = System.DateTime.Now.AddDays(-3.0)
-              To = System.DateTime.Now }
+            { From = System.DateTime.UtcNow.AddDays(-3.0)
+              To = System.DateTime.UtcNow }
         
         async {
             do! DataUploader.uploadDataAsync
                     this.Logger
                     Settings.ConnectionStrings.WeatherStation 
                     DbInsertOptions.Default
+                    testTimeZone
                     timeInterval
                     (getTestDeviceInfo())
                     (getTestStationId())

@@ -9,9 +9,11 @@ let executeAsync
         (dbInsertOptions: DbInsertOptions)
         (intervalEndTimeUtc: DateTime)
         (maxTimeInterval: TimeSpan): Async<bool> = 
-    let uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime) = 
+    let uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime, timeZone) = 
         let getIntervalStartTime = function
-            | Some (time: DateTime) -> time + TimeSpan.FromSeconds(1.0)
+            | Some (time: DateTime) -> 
+                let timeUtc = TimeUtils.timeToUtc timeZone time
+                timeUtc + TimeSpan.FromSeconds(1.0)
             | None -> intervalEndTimeUtc.Add(-maxTimeInterval)
         async {
             try
@@ -19,6 +21,7 @@ let executeAsync
                     logger
                     connectionString
                     dbInsertOptions
+                    timeZone
                     { From = (getIntervalStartTime lastMeasurementTime)
                       To = intervalEndTimeUtc }
                     deviceInfo
@@ -30,8 +33,8 @@ let executeAsync
     async {
         logger.Information("Start job; intervalEndTimeUtc: {intervalEndTime}; maxTimeInterval: {maxTimeInterval}", intervalEndTimeUtc, maxTimeInterval)
         let! lastMeasurements = DbService.getStationsLastMeasurementsAsync logger connectionString
-        for (stationId, deviceInfo, lastMeasurementTime) in lastMeasurements do
-            do! uploadDataForDeviceAsync (stationId, deviceInfo, lastMeasurementTime)
+        for lastMeasurementInfo in lastMeasurements do
+            do! uploadDataForDeviceAsync lastMeasurementInfo
         logger.Information("Job complete")
         return true
     }

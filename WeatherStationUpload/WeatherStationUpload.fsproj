@@ -57,6 +57,7 @@
     <Compile Include="Types.fs" />
     <Compile Include="AsyncUtils.fs" />
     <Compile Include="MeasureUtils.fs" />
+    <Compile Include="TimeUtils.fs" />
     <Compile Include="TryParser.fs" />
     <Compile Include="HtmlLoader.fs" />
     <Compile Include="HtmlParser.fs" />

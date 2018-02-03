@@ -83,7 +83,7 @@ let getMeasurementsAsync
 let getStationsLastMeasurementsAsync 
         (logger: ILogger)
         (connectionString: string)
-        : Async<list<StationId * DeviceInfo * DateTime option>> =
+        : Async<list<StationId * DeviceInfo * DateTime option * TimeZone>> =
     async {
         use connection = new SqlConnection(connectionString)
         let! records = connection.QueryAsync("
@@ -100,5 +100,6 @@ let getStationsLastMeasurementsAsync
                         DeviceId = record ? DeviceId
                         VendorId = record ? VendorId
                     },
-                    record ? Timestamp |> toOption)
+                    record ? Timestamp |> toOption,
+                    TimeZone "FLE Standard Time")
     }

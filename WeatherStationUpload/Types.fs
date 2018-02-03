@@ -8,6 +8,9 @@ type ``%``
 [<Measure>] 
 type C
 
+type TimeZone = 
+    | TimeZone of string
+
 type TimeInterval = 
     { From: DateTime
       To: DateTime }

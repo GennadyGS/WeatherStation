@@ -13,6 +13,8 @@ type DbServiceTests() =
     let testConnectionString = Settings.ConnectionStrings.WeatherStation
     let testStationId = getTestStationId()
 
+    let testTimeZone = TimeZone "FLE Standard Time"
+
     let getSampleMeasurements () : Measurement list = 
         [ 
             { TemperatureInside = Some 19.2m<C>
@@ -65,7 +67,7 @@ type DbServiceTests() =
             DbService.getStationsLastMeasurementsAsync this.Logger testConnectionString
             |> Async.RunSynchronously
         
-        results = [testStationId, getTestDeviceInfo(), None] |> should be True
+        results = [testStationId, getTestDeviceInfo(), None, testTimeZone] |> should be True
 
     [<Fact>]
     member this.``getStationsLastMeasurements returns correct last measurement time``() = 
@@ -80,4 +82,4 @@ type DbServiceTests() =
             |> List.map (fun item -> item.Timestamp)
             |> List.max
 
-        results |> should equal [testStationId, getTestDeviceInfo(), Some maxSampleMeasurementTime]
+        results |> should equal [testStationId, getTestDeviceInfo(), Some maxSampleMeasurementTime, testTimeZone]
