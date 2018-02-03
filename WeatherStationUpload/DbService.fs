@@ -87,9 +87,10 @@ let getStationsLastMeasurementsAsync
     async {
         use connection = new SqlConnection(connectionString)
         let! records = connection.QueryAsync("
-            SELECT s.Id stationId, s.DeviceId, s.VendorId, MAX(m.Timestamp) Timestamp FROM dbo.Stations s
+            SELECT s.Id stationId, s.DeviceId, s.VendorId, s.TimeZoneName, MAX(m.Timestamp) Timestamp
+            FROM dbo.Stations s
             LEFT OUTER JOIN dbo.Measurements m ON s.Id = m.StationId
-            GROUP BY s.Id, s.DeviceId, s.VendorId") |> Async.AwaitTask
+            GROUP BY s.Id, s.DeviceId, s.VendorId, s.TimeZoneName") |> Async.AwaitTask
         return
             records
             |> Seq.toList
@@ -101,5 +102,5 @@ let getStationsLastMeasurementsAsync
                         VendorId = record ? VendorId
                     },
                     record ? Timestamp |> toOption,
-                    TimeZone "FLE Standard Time")
+                    TimeZone record ? TimeZoneName)
     }
