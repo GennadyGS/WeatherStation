@@ -20,7 +20,7 @@ let main argv =
             logger 
             Settings.ConnectionStrings.WeatherStation
             dbInsertOptions
-            DateTime.Now
+            DateTime.UtcNow
             (TimeSpan.FromDays(Settings.MaxTimeIntervalDays |> float))
         |> Async.RunSynchronously
         |> function

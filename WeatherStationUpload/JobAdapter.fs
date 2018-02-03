@@ -14,13 +14,13 @@ let executeAsync(logger: ILogger,
                  connectionString: string, 
                  dbInsertTimeout: Nullable<TimeSpan>, 
                  dbInsertBatchSize: Nullable<int>,
-                 intervalEndTime: DateTime, 
+                 intervalEndTimeUtc: DateTime, 
                  maxTimeInterval: TimeSpan): Task<bool> = 
     Job.executeAsync 
         logger 
         connectionString 
         { Timeout = dbInsertTimeout |> nullableToOption
           BatchSize = dbInsertBatchSize |> nullableToOption }
-        intervalEndTime 
+        intervalEndTimeUtc 
         maxTimeInterval
     |> Async.StartAsTask
