@@ -5,13 +5,12 @@ open System.Data.SqlClient
 open FSharp.Interop.Dynamic
 open Serilog
 open Dapper
+open Dapper.Bulk
 open MeasureUtils
 open WeatherStationUpload
+open System.ComponentModel.DataAnnotations.Schema
 
-let InsertSqlStatement = "
-    INSERT INTO dbo.Measurements(StationId, Timestamp, TemperatureInside, TemperatureOutside, HumidityInside, HumidityOutside)
-    VALUES(@stationId, @timestamp, @temperatureInside, @temperatureOutside, @humidityInside, @humidityOutside)"
-
+[<Table("Measurements")>]
 type MeasurementDbEntity = 
     { StationId: int
       Timestamp: DateTime
@@ -27,7 +26,12 @@ let optionToNullable = function
     | Some value -> Nullable(value)
     | None -> Nullable()
 
-let measurementToEntity (StationId stationId) (measurement: Measurement) : MeasurementDbEntity = 
+let getOrElse defaultValue = 
+    function
+    | Some value -> value
+    | None -> defaultValue
+
+let stationMeasurementToEntity (StationId stationId, measurement: Measurement) : MeasurementDbEntity = 
     { StationId = stationId
       Timestamp = measurement.Timestamp
       TemperatureInside = measurement.TemperatureInside |> Option.map celsiusToValue |> optionToNullable
@@ -35,30 +39,40 @@ let measurementToEntity (StationId stationId) (measurement: Measurement) : Measu
       HumidityInside = measurement.HumidityInside |> Option.map percentToValue |> optionToNullable
       HumidityOutside = measurement.HumidityOutside |> Option.map percentToValue |> optionToNullable }
       
-let insertMeasurementAsync
-        (logger: ILogger) 
-        (connectionString: string) 
-        (StationId stationId, measurement: Measurement) 
-        : Async<unit> =
-    async { 
-        use connection = new SqlConnection(connectionString)
-        return! connection.ExecuteAsync(
-            InsertSqlStatement, 
-            measurement |> measurementToEntity (StationId stationId)) |> Async.AwaitTask |> Async.Ignore
-    }
+// It is required because optional parameters in C# helper methods work not as expected
+type private BulkCopyUtils =
+    static member BulkInsertAsync(connection: SqlConnection, 
+                                  data: 'a seq,
+                                  ?transaction: SqlTransaction, 
+                                  ?batchSize: int, 
+                                  ?bulkCopyTimeout: TimeSpan)
+                                  : Async<unit> =
+        let defalutBatchSize = 0
+        let defaultCulkCopyTimeoutSec = 30
+        connection.BulkInsertAsync(
+            data, 
+            transaction = (transaction |> getOrElse null), 
+            batchSize = (batchSize |> getOrElse defalutBatchSize), 
+            bulkCopyTimeout = (
+                bulkCopyTimeout 
+                |> Option.map (fun timeSpan -> int(timeSpan.TotalSeconds)) 
+                |> getOrElse defaultCulkCopyTimeoutSec))
+        |> Async.AwaitTask
 
 let insertMeasurementsAsync
         (logger: ILogger) 
         (connectionString: string) 
         (options: DbInsertOptions)
-        (measurements: list<StationId * Measurement>)
+        (stationMeasurements: list<StationId * Measurement>)
         : Async<unit> =
     async { 
         use connection = new SqlConnection(connectionString)
-        for (stationId, measurement) in measurements do
-            do! connection.ExecuteAsync(
-                    InsertSqlStatement, 
-                    measurement |> measurementToEntity stationId) |> Async.AwaitTask |> Async.Ignore
+        do! connection.OpenAsync() |> Async.AwaitTask
+        let measurementEntities = 
+            stationMeasurements
+            |> List.map stationMeasurementToEntity
+
+        do! BulkCopyUtils.BulkInsertAsync(connection, measurementEntities, ?bulkCopyTimeout = options.Timeout, ?batchSize = options.BatchSize) |> Async.Ignore
     }
 
 let getMeasurementsAsync

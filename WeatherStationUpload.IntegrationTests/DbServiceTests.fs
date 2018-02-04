@@ -29,11 +29,6 @@ type DbServiceTests() =
     let sortMeasurements (measurements : Measurement list) : Measurement list = 
         measurements |> List.sortBy (fun measurement -> measurement.Timestamp)
     
-    member private this.saveMeasurement measurement =
-        (getTestStationId(), measurement)
-        |> DbService.insertMeasurementAsync this.Logger testConnectionString 
-        |> Async.RunSynchronously
-
     member private this.saveMeasurements measurements =
         measurements
         |> List.map (fun measurement -> (getTestStationId(), measurement))

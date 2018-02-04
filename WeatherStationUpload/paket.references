@@ -5,3 +5,4 @@ FSharp.Control.AsyncSeq
 FSharp.Interop.Dynamic
 Dapper
 Serilog
+Dapper.Bulk
