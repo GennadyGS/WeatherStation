@@ -18,10 +18,14 @@ namespace WeatherStationUpload.FunctionApp
                 .CreateLogger();
             logger.Information($"WeatherStationUpload function started at UTC time: {DateTime.UtcNow}");
 
-            string connectionString = ConfigurationManager.AppSettings["DbConnectionString"];
             var maxTimeInterval = TimeSpan.FromDays(100);
 
-            var result = await JobAdapter.executeAsync(logger, connectionString, null, null, DateTime.UtcNow, maxTimeInterval);
+            var result = await JobAdapter.executeAsync(logger,
+                connectionString: ConfigurationReader.DbConnectionString,
+                dbInsertTimeout: ConfigurationReader.DbInsertTimeout,
+                dbInsertBatchSize: ConfigurationReader.DbInsertBatchSize,
+                intervalEndTimeUtc: DateTime.UtcNow,
+                maxTimeInterval: ConfigurationReader.MaxTimeInterval);
             logger.Information($"WeatherStationUpload function finished with result {result} at UTC time: {DateTime.UtcNow}");
         }
     }
