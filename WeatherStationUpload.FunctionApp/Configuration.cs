@@ -11,4 +11,6 @@ internal static class ConfigurationReader
     public static TimeSpan DbInsertTimeout => TimeSpan.Parse(ConfigurationManager.AppSettings[nameof(DbInsertTimeout)]);
 
     public static int DbInsertBatchSize => int.Parse(ConfigurationManager.AppSettings[nameof(DbInsertBatchSize)]);
+
+    public static TimeSpan MaxInactiveTime => TimeSpan.Parse(ConfigurationManager.AppSettings[nameof(MaxInactiveTime)]);
 }

@@ -6,3 +6,4 @@ FSharp.Interop.Dynamic
 Dapper
 Serilog
 Dapper.Bulk
+System.ValueTuple

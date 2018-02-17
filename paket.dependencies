@@ -11,5 +11,6 @@ nuget FSharp.Interop.Dynamic
 nuget Dapper
 nuget Serilog
 nuget Serilog.Sinks.Console
+nuget System.ValueTuple
 nuget xunit
 nuget xunit.runner.visualstudio version_in_path: true

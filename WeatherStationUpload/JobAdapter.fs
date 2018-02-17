@@ -10,6 +10,10 @@ let private nullableToOption (a : System.Nullable<'T>) =
     else
         None
 
+let private optionToNullable = function
+    | Some value -> Nullable value
+    | None -> Nullable ()
+
 let executeAsync(logger: ILogger, 
                  connectionString: string, 
                  dbInsertTimeout: Nullable<TimeSpan>, 
@@ -24,3 +28,13 @@ let executeAsync(logger: ILogger,
         intervalEndTimeUtc 
         maxTimeInterval
     |> Async.StartAsTask
+
+let getStationsLastMeasurementsAsync(logger: ILogger, connectionString: string)
+        : Task<struct (StationInfo * Nullable<DateTime>) array> =
+    async {
+        let! results = DbService.getStationsLastMeasurementsAsync logger connectionString 
+        return results
+        |> List.map
+            (fun (stationInfo, lastMeasurementOption) -> struct(stationInfo, optionToNullable(lastMeasurementOption)))
+        |> List.toArray
+    } |> Async.StartAsTask
