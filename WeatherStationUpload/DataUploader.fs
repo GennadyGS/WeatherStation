@@ -11,7 +11,7 @@ let uploadDataAsync
         (stationInfo: StationInfo)
         : Async<unit> =
     logger.Information("Upload data for device {device} from UTC time {from} to {to}", 
-        stationInfo.DeviceInfo.DeviceId, timeIntervalUtc.From, timeIntervalUtc.To)
+        stationInfo.DeviceInfo.DeviceId, timeIntervalUtc.From.ToString("s"), timeIntervalUtc.To.ToString("s"))
     collectDataAsync logger timeIntervalUtc stationInfo
     |> AsyncUtils.map (List.map (fun measurement -> stationInfo.StationId, measurement))
     |> AsyncUtils.bind 

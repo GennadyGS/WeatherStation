@@ -29,7 +29,7 @@ let executeAsync
         }
 
     async {
-        logger.Information("Start job; intervalEndTimeUtc: {intervalEndTime}; maxTimeInterval: {maxTimeInterval}", intervalEndTimeUtc, maxTimeInterval)
+        logger.Information("Start job; intervalEndTimeUtc: {intervalEndTime: s}; maxTimeInterval: {maxTimeInterval}", intervalEndTimeUtc.ToString("s"), maxTimeInterval)
         let! lastMeasurements = DbService.getStationsLastMeasurementsAsync logger connectionString
         for lastMeasurementInfo in lastMeasurements do
             do! uploadDataForDeviceAsync lastMeasurementInfo
