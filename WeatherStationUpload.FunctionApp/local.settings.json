@@ -5,6 +5,10 @@
     "DbConnectionString": "Data Source=gennadygs.database.windows.net;Initial Catalog=WeatherStation;Integrated Security=False;User ID=gennadygs;Password=zl0zYH`};Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
     "MaxTimeIntervalDays": "100",
     "DbInsertTimeout": "05:00:00",
-    "DbInsertBatchSize": "1000"
+    "DbInsertBatchSize": "1000",
+    "NotificationSchedule": "0 */1 * * * *",
+    "SendGridKey": "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",
+    "MailFrom": "gennadyGS@gmail.com",
+    "MailTo": "gennadyGS@gmail.com"
   }
 }

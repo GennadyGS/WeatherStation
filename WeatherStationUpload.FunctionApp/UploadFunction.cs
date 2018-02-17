@@ -10,12 +10,15 @@ namespace WeatherStationUpload.FunctionApp
     public static class UploadFunction
     {
         [FunctionName(nameof(UploadFunction))]
-        public static async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, TraceWriter traceWriter)
+        public static async Task Run(
+            [TimerTrigger("0 */1 * * * *")]
+            TimerInfo myTimer, 
+            TraceWriter traceWriter)
         {
             ILogger logger = new LoggerConfiguration()
                 .WriteTo.TraceWriter(traceWriter)
                 .CreateLogger();
-            logger.Information($"WeatherStationUpload function started");
+            logger.Information($"{nameof(UploadFunction)} function started");
 
             await JobAdapter.executeAsync(logger,
                 connectionString: ConfigurationReader.DbConnectionString,
@@ -24,7 +27,7 @@ namespace WeatherStationUpload.FunctionApp
                 intervalEndTimeUtc: DateTime.UtcNow,
                 maxTimeInterval: ConfigurationReader.MaxTimeInterval);
 
-            logger.Information($"WeatherStationUpload function finished");
+            logger.Information($"{nameof(UploadFunction)} function finished");
         }
     }
 }
