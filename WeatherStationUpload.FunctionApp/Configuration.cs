@@ -3,7 +3,7 @@ using System.Configuration;
 
 internal static class ConfigurationReader
 {
-    public static string DbConnectionString => ConfigurationManager.AppSettings[nameof(DbConnectionString)];
+    public static string DbConnectionString => ConfigurationManager.ConnectionStrings["WeatherStationDb"].ConnectionString;
 
     public static TimeSpan MaxTimeInterval => 
         TimeSpan.FromDays(int.Parse(ConfigurationManager.AppSettings[nameof(MaxTimeInterval) + "Days"]));
