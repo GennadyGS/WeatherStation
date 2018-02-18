@@ -1,7 +1,7 @@
 {
   "IsEncrypted": false,
   "ConnectionStrings": {
-    "WeatherStationDb": "Data Source=gennadygs.database.windows.net;Initial Catalog=WeatherStation;Integrated Security=False;User ID=gennadygs;Password=zl0zYH`};Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+    "WeatherStationDb": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=WeatherStation;Integrated Security=True"
   },
   "Values": {
     "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=a9274de33654b4a88af0fc6f;AccountKey=iRUpVLkyYnNL5Tyf3lsOSnWOOiGw2uaL3cpzPoaCiUsB53OkwbyV+LPifJEafP1+9iWlBraSGWUF8Fejhf/FpA==;EndpointSuffix=core.windows.net",
