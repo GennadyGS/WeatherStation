@@ -14,7 +14,7 @@ namespace WeatherStationUpload.FunctionApp
         [FunctionName(nameof(NotificationFunction))]
         [return: SendGrid(ApiKey = "SendGridKey", From = "%MailFrom%", To = "%MailTo%")]
         public static async Task<Mail> Run(
-            [TimerTrigger("%NotificationSchedule%")] TimerInfo myTimer,
+            [TimerTrigger("%NotificationSchedule%", RunOnStartup = true)] TimerInfo myTimer,
             TraceWriter traceWriter)
         {
             ILogger logger = new LoggerConfiguration()

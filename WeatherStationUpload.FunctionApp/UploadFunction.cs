@@ -11,7 +11,7 @@ namespace WeatherStationUpload.FunctionApp
     {
         [FunctionName(nameof(UploadFunction))]
         public static async Task Run(
-            [TimerTrigger("0 */1 * * * *")]
+            [TimerTrigger("%UploadSchedule%", RunOnStartup = true)]
             TimerInfo myTimer, 
             TraceWriter traceWriter)
         {

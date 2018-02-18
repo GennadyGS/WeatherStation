@@ -3,10 +3,11 @@
   "Values": {
     "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=a9274de33654b4a88af0fc6f;AccountKey=iRUpVLkyYnNL5Tyf3lsOSnWOOiGw2uaL3cpzPoaCiUsB53OkwbyV+LPifJEafP1+9iWlBraSGWUF8Fejhf/FpA==;EndpointSuffix=core.windows.net",
     "DbConnectionString": "Data Source=gennadygs.database.windows.net;Initial Catalog=WeatherStation;Integrated Security=False;User ID=gennadygs;Password=zl0zYH`};Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+    "UploadSchedule": "0 */1 * * * *",
     "MaxTimeIntervalDays": "100",
     "DbInsertTimeout": "05:00:00",
     "DbInsertBatchSize": "1000",
-    "NotificationSchedule": "0 0 9 * * *",
+    "NotificationSchedule": "0 0 */3 * * *",
     "MaxInactiveTime": "25:00:00",
     "SendGridKey": "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",
     "MailFrom": "gennadyGS@gmail.com",
