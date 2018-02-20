@@ -4,6 +4,7 @@ using SendGrid.Helpers.Mail;
 using Serilog;
 using Serilog.Sinks.AzureWebJobsTraceWriter;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,14 +23,30 @@ namespace WeatherStationUpload.FunctionApp
                 .CreateLogger();
             logger.Information($"{nameof(NotificationFunction)} function started");
 
+            var verificationTimeUtc = DateTime.UtcNow;
+
+            var statuses = await GetStationStatusesAsync(logger, verificationTimeUtc);
+
+            if (statuses.All(status => status.UpToDate))
+            {
+                logger.Information($"{nameof(NotificationFunction)} function finished without notification: all stations are up to date");
+                return null;
+            }
+
+            Mail mail = CreateMail(statuses, verificationTimeUtc);
+            logger.Information($"{nameof(NotificationFunction)} function finished with notification: some stations are not up to date");
+            return mail;
+        }
+
+        private static async Task<IReadOnlyCollection<StationStatus>> GetStationStatusesAsync(ILogger logger, DateTime verificationTimeUtc)
+        {
             var lastMeasurements = await JobAdapter.getStationsLastMeasurementsAsync(logger, ConfigurationReader.DbConnectionString);
 
-            var now = DateTime.UtcNow;
-
-            var statuses = lastMeasurements
-                .Select<(StationInfo stationInfo, DateTime? lastMeasurementTime), StationStatus>(item => {
+            return lastMeasurements
+                .Select<(StationInfo stationInfo, DateTime? lastMeasurementTime), StationStatus>(item =>
+                {
                     var timePassed = item.lastMeasurementTime.HasValue
-                        ? now - TimeToUtc(item.lastMeasurementTime.Value, item.stationInfo.TimeZone.Item) : (TimeSpan?)null;
+                        ?  verificationTimeUtc - TimeToUtc(item.lastMeasurementTime.Value, item.stationInfo.TimeZone.Item) : (TimeSpan?)null;
                     return new StationStatus()
                     {
                         StationInfo = item.stationInfo,
@@ -37,8 +54,11 @@ namespace WeatherStationUpload.FunctionApp
                         InactiveDuration = timePassed,
                         UpToDate = timePassed.HasValue && timePassed <= ConfigurationReader.MaxInactiveTime
                     };
-                });
+                }).ToList();
+        }
 
+        private static Mail CreateMail(IReadOnlyCollection<StationStatus> statuses, DateTime verificarionTimeUtc)
+        {
             var mail = new Mail
             {
                 Subject = $"{nameof(WeatherStationUpload)} notification"
@@ -48,12 +68,10 @@ namespace WeatherStationUpload.FunctionApp
             {
                 Type = "text/plain",
                 Value = string.Join(Environment.NewLine,
-                    new[] { $"Verification time UTC: {now}" }
+                    new[] { $"Verification time UTC: {verificarionTimeUtc}" }
                         .Concat(statuses.Select(status => status.ToString())))
             };
             mail.AddContent(content);
-
-            logger.Information($"{nameof(NotificationFunction)} function finished");
 
             return mail;
         }
