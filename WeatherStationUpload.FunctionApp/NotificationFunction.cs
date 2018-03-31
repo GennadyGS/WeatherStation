@@ -21,7 +21,7 @@ namespace WeatherStationUpload.FunctionApp
             ILogger logger = new LoggerConfiguration()
                 .WriteTo.TraceWriter(traceWriter)
                 .CreateLogger();
-            logger.Information($"{nameof(NotificationFunction)} function started");
+            logger.Information($"{nameof(NotificationFunction)} function started; MaxInactiveTime: {ConfigurationReader.MaxInactiveTime}");
 
             var verificationTimeUtc = DateTime.UtcNow;
 
@@ -92,7 +92,9 @@ namespace WeatherStationUpload.FunctionApp
             public override string ToString()
             {
                 var inactiveMessage = InactiveDuration.HasValue ? $"for {InactiveDuration}" : "";
-                var statusMessage = UpToDate ? "OK" : $"not up to date {inactiveMessage}";
+                var statusMessage = UpToDate 
+                    ? $"OK (last measurement time: {LastMeasurementTime})"
+                    : $"not up to date {inactiveMessage}";
                 return $"Station {StationInfo.DeviceInfo.DeviceId} is {statusMessage}";
             }
         }
