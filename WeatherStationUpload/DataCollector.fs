@@ -4,6 +4,7 @@ open HtmlLoader
 open HtmlParser
 open FSharp.Control
 open Serilog
+open WeatherStationUpload
 
 [<Literal>]
 let private maxPageSize = 250;
@@ -29,6 +30,8 @@ let collectDataAsync
         1
     |> AsyncSeq.concatSeq
     |> AsyncSeq.toListAsync
+    |> AsyncUtils.map (List.filter (fun measurement -> 
+        TimeUtils.timeIsCorrect stationInfo.TimeZone measurement.Timestamp))
     |> AsyncUtils.map (List.filter (fun measurement -> 
         let timeStampUtc = TimeUtils.timeToUtc stationInfo.TimeZone measurement.Timestamp 
         TimeUtils.timeInsideInterval timeIntervalUtc timeStampUtc ))
