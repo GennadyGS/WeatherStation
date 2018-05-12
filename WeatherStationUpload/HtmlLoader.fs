@@ -5,7 +5,7 @@ open System.Net
 open System
 
 [<Literal>]
-let private url = "http://measurements.mobile-alerts.eu/Home/MeasurementDetails"
+let private url = "https://measurements.mobile-alerts.eu/Home/MeasurementDetails"
 
 let private toEpoch dateTime = 
     DateTimeOffset(dateTime).ToUnixTimeSeconds()
