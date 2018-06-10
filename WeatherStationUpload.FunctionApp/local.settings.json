@@ -10,7 +10,7 @@
     "DbInsertTimeout": "05:00:00",
     "DbInsertBatchSize": "1000",
     "NotificationSchedule": "0 1 */3 * * *",
-    "MaxInactiveTime": "24:00:00",
+    "MaxInactiveTime": "26:00:00",
     "SendGridKey": "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",
     "MailFrom": "gennadyGS@gmail.com",
     "MailTo": "gennadyGS@gmail.com"

@@ -21,7 +21,7 @@ namespace WeatherStationUpload.FunctionApp
             ILogger logger = new LoggerConfiguration()
                 .WriteTo.TraceWriter(traceWriter)
                 .CreateLogger();
-            logger.Information($"{nameof(NotificationFunction)} function started; MaxInactiveTime: {ConfigurationReader.MaxInactiveTime}");
+            logger.Information($"{nameof(NotificationFunction)} function started; MaxInactiveTime: {ConfigurationReader.MaxInactiveTime}; Schedule: {myTimer.Schedule}");
 
             var verificationTimeUtc = DateTime.UtcNow;
 
